@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path('twitch/', include('apps.twitch.urls')),
     path('api/', include('apps.apis.urls')),
     path('admin/', admin.site.urls),
 ]
