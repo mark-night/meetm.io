@@ -1,15 +1,51 @@
+// >code lazy loading (and code splitting) (recommended by React too)
+// >React's native way for this is React.lazy() with limitation
+// https://loadable-components.com/
+import loadable from '@loadable/component';
 import React from 'react';
 // use (plain) Router instead of BrowserRouter as we are creating and maintaining
 // history object on our own.
 // import { BrowserRouter, Route } from 'react-router-dom';
 import { Router, Route, Switch } from 'react-router-dom';
-import StreamCreate from './streams/StreamCreate';
-import StreamDelete from './streams/StreamDelete';
-import StreamEdit from './streams/StreamEdit';
-import StreamList from './streams/StreamList';
-import StreamShow from './streams/StreamShow';
-import Header from './Header';
 import history from '../history';
+import Header from './Header';
+
+const fallback = <div>Loading...</div>;
+const StreamList = loadable(
+  () =>
+    import(
+      /* webpackChunkName: "_List", webpackPrefetch: true */ './streams/StreamList'
+    ),
+  { fallback }
+);
+const StreamCreate = loadable(
+  () =>
+    import(
+      /* webpackChunkName: "_Create", webpackPrefetch: true */ './streams/StreamCreate'
+    ),
+  { fallback }
+);
+const StreamEdit = loadable(
+  () =>
+    import(
+      /* webpackChunkName: "_Edit", webpackPrefetch: true */ './streams/StreamEdit'
+    ),
+  { fallback }
+);
+const StreamShow = loadable(
+  () =>
+    import(
+      /* webpackChunkName: "_Show", webpackPrefetch: true */ './streams/StreamShow'
+    ),
+  { fallback }
+);
+const StreamDelete = loadable(
+  () =>
+    import(
+      /* webpackChunkName: "_Delete", webpackPrefetch: true */ './streams/StreamDelete'
+    ),
+  { fallback }
+);
 
 const App = () => {
   return (
