@@ -52,7 +52,6 @@ const App = () => {
     <div className="ui container">
       {/* <BrowserRouter> */}
       <Router history={history}>
-        <br />
         <Header />
         {/* Switch stops greedy routing, that is to only route for the first
         match, so StreamShow won't be taken as a match for StreamCreate. */}

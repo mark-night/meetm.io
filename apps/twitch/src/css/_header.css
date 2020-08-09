@@ -1,0 +1,7 @@
+.ui.secondary.pointing.menu {
+    margin-top: 1rem;
+}
+
+.ui.secondary.pointing.menu .right.menu {
+    align-items: center;
+}
