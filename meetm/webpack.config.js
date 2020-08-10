@@ -27,13 +27,36 @@ const config = {
     rules: [
       {
         test: /\.(sa|sc|c)ss$/i,
-        use: ['css-loader', 'sass-loader']
+        use: [
+          'css-loader',
+          {
+            loader: 'resolve-url-loader',
+            options: { keepQuery: true }
+          },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: true }
+          }
+        ]
       },
       {
         test: /\.jsx?$/i,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 8192,
+            // fallback to file-loader with following options
+            // modify context so [path] doesn't contain leading 'src'
+            context: path.join(__dirname, 'src'),
+            name: '[path][name].[contenthash:8].[ext][query]'
+          }
         }
       }
     ]
