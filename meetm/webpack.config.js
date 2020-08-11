@@ -3,6 +3,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const task = process.env.npm_lifecycle_event;
 const djangoPath = {
@@ -12,6 +13,7 @@ const djangoPath = {
 };
 const subDir = { js: 'js', css: 'css', img: 'img' };
 const packOption = {
+  hashLength: 8,
   analyzer: false,
   splitVendors: false
 };
@@ -21,7 +23,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, djangoPath.static),
     publicPath: '/' + djangoPath.static,
-    hashDigestLength: 8
+    hashDigestLength: packOption.hashLength
   },
   module: {
     rules: [
@@ -52,10 +54,10 @@ const config = {
           loader: 'url-loader',
           options: {
             limit: 8192,
-            // fallback to file-loader with following options
+            // larger files fallback to file-loader with following options
             // modify context so [path] doesn't contain leading 'src'
             context: path.join(__dirname, 'src'),
-            name: '[path][name].[contenthash:8].[ext][query]'
+            name: `[path][name].[contenthash:${packOption.hashLength}].[ext][query]`
           }
         }
       }
@@ -107,6 +109,15 @@ if (task === 'dev') {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: path.resolve(__dirname, djangoPath.templates, 'index.html')
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          // image assets in img/static/ are not involved in webpack bundling
+          from: 'img/static/**/*',
+          context: path.resolve(__dirname, 'src')
+        }
+      ]
     })
   ];
 

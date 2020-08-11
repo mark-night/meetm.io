@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     # middleware for CORS headers
     # https://github.com/adamchainz/django-cors-headers
     'corsheaders',
+    'url_or_relative_url_field',
+    'apps.projects.apps.ProjectsConfig',
 ]
 
 # >disable browsable API
@@ -145,3 +147,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # path where collectstatic should collect static files to
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
