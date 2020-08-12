@@ -41,4 +41,4 @@ class Image(models.Model):
     image = models.ImageField(upload_to=get_upload_path)
 
     def __str__(self):
-        return self.project.title
+        return self.image.url

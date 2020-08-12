@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps.apis.streams.apps.StreamsConfig',
+    'apps.apis.proj.apps.ProjConfig',
     'apps.twitch.apps.TwitchConfig',
     # middleware for CORS headers
     # https://github.com/adamchainz/django-cors-headers
