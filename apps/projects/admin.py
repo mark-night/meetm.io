@@ -18,7 +18,8 @@ class ImageAdminInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'publish', 'title', 'category', 'desc_short')
+    list_display = ('id', 'publish', 'title',
+                    'category', 'desc_short', 'proj_url', 'code_url')
     list_filter = ('publish', 'category', 'tags')
     list_display_links = ('id', 'title', 'desc_short')
     list_editable = ('publish', 'category')
