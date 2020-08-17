@@ -1,9 +1,18 @@
 import '../scss/style.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import App from './components/App.jsx';
+import store from './store/store';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+document.title = 'Projects | meetm.io';
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
 
 if (module.hot) {
   module.hot.accept();

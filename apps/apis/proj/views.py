@@ -24,8 +24,10 @@ def projectList(request):
             else:
                 proj[field] = getattr(p, field)
         projects.append(proj)
+    categories = [c.category for c in Category.objects.all()]
+    tags = [t.tag for t in Tag.objects.all()]
 
-    return JsonResponse(projects, safe=False)
+    return JsonResponse({'projects': projects, 'categories': categories, 'tags': tags})
 
 
 def tagList(request):

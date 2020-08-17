@@ -1,0 +1,15 @@
+/**
+ * ACTION TYPES
+ */
+export const FETCH_PROJS = 'FETCH_PROJS';
+export const PICK_PROJ = 'PICK_PROJ';
+export const FILTER_PROJS = 'FILTER_PROJS';
+export const UPDATE_FILTER_TERMS = 'UPDATE_FILTER_TERMS';
+export const UPDATE_FILTER_SELECTIONS = 'UPDATE_FILTER_SELECTIONS';
+export const UPDATE_FILTER_FILTERS = 'UPDATE_FILTER_FILTERS';
+
+/**
+ * SELECTION VALUES
+ */
+export const ALL = '__ALL__';
+export const NONE = '__NONE__';

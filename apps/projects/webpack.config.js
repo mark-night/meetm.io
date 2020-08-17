@@ -25,6 +25,9 @@ const config = {
     publicPath: '/' + djangoPath.static,
     hashDigestLength: packOption.hashLength,
   },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
   module: {
     rules: [
       {
@@ -67,6 +70,7 @@ const config = {
 
 if (task === 'dev') {
   config.output.filename = path.join(subDir.js, '[name].js');
+  config.devtool = 'eval-source-map';
 
   config.devServer = {
     contentBase: [
