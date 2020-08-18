@@ -1,9 +1,9 @@
-@import './var';
+@use './var';
 
 html,
 body {
     margin: 0;
     box-sizing: border-box;
-    background-color: $white;
-    font-family: $fontSansSerif;
+    background-color: var.$white;
+    font-family: var.$fontSansSerif;
 }

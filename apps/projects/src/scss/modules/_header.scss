@@ -1,26 +1,23 @@
-@import '../global/var';
+@use '../global/var';
+@use '../global/mixin';
 
 .header {
-    max-width: $widthMax;
+    max-width: var.$widthMax;
     height: 2rem;
     margin: 1rem auto 0;
     display: grid;
     grid-template-columns: minmax(100px, 150px) minmax(100px, 150px) 1fr;
     grid-gap: 1rem;
 
-    &__select,
-    &__select:focus,
-    &__select:visited {
-        outline: none;
-        border: none;
-        font-family: $fontSansSerif;
+    &__select {
+        @include mixin.remove-default-outline;
+
+        font-family: var.$fontSansSerif;
     }
 
-    &__input,
-    &__input:focus,
-    &__input:visited {
-        outline: none;
-        border: none;
-        font-family: $fontSansSerif;
+    &__input {
+        @include mixin.remove-default-outline;
+
+        font-family: var.$fontSansSerif;
     }
 }

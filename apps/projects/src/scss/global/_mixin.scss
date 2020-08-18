@@ -1,0 +1,8 @@
+@mixin remove-default-outline {
+    &,
+    &:focus,
+    &:visited {
+        outline: none;
+        border: none;
+    }
+}

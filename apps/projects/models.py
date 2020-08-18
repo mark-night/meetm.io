@@ -3,24 +3,46 @@ from url_or_relative_url_field.fields import URLOrRelativeURLField
 
 
 class Tag(models.Model):
-    tag = models.CharField(max_length=20)
+    tag = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.tag
 
+    class Meta:
+        abstract = True
 
-class Category(models.Model):
-    category = models.CharField(max_length=20)
 
-    def __str__(self):
-        return self.category
+class Category(Tag):
+    pass
+
+
+class Language(Tag):
+    pass
+
+
+class Framework(Tag):
+    pass
+
+
+class Tool(Tag):
+    pass
+
+
+class Concept(Tag):
+    pass
 
 
 class Project(models.Model):
     title = models.CharField(max_length=50)
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, related_name='projects')
-    tags = models.ManyToManyField(Tag, related_name='projects')
+    languages = models.ManyToManyField(
+        Language, related_name='projects', blank=True)
+    frameworks = models.ManyToManyField(
+        Framework, related_name='projects', blank=True)
+    tools = models.ManyToManyField(Tool, related_name='projects', blank=True)
+    concepts = models.ManyToManyField(
+        Concept, related_name='projects', blank=True)
     desc_short = models.CharField(max_length=200)
     desc_long = models.TextField()
     proj_url = URLOrRelativeURLField()
