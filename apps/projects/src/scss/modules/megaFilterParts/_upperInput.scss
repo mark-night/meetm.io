@@ -1,0 +1,22 @@
+@use '../../global/var' as v;
+@use '../../global/mixin' as m;
+
+@mixin upper-input {
+    padding: 0 1rem;
+    border-right: 1px solid v.$colorBase;
+
+    @include m.tiny-width {
+        border-right: none;
+    }
+
+    & input {
+        @include m.remove-default-outline;
+
+        font-family: v.$fontSansSerif;
+        font-size: 1.2rem;
+        line-height: 1;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

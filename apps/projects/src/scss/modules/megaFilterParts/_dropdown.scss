@@ -1,0 +1,70 @@
+@use '../../global/var' as v;
+@use '../../global/mixin' as m;
+
+@mixin dropdown {
+    @include m.big-soft-shadow;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border-radius: 0 0 10px 10px;
+    max-height: 50vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 1rem 1rem 2rem;
+    display: grid;
+    justify-content: space-around;
+    justify-items: stretch;
+    grid-template-columns: repeat(5, 10rem);
+
+    @include m.medium-width {
+        grid-template-columns: repeat(4, 10rem);
+    }
+
+    @include m.small-width {
+        grid-template-columns: repeat(3, 10rem);
+    }
+
+    @include m.tiny-width {
+        grid-template-columns: 1fr;
+
+        &__optionGroup:last-child {
+            margin-bottom: 2rem;
+        }
+    }
+
+    &__optionGroup {
+        align-self: stretch;
+        padding: 0 1rem;
+    }
+
+    &__label {
+        color: v.$colorDark;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: default;
+        padding: 3px;
+        margin: 0.3rem auto;
+    }
+
+    &__option {
+        font-family: v.$fontMonospace;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        padding: 3px;
+
+        &:hover {
+            background-color: v.$colorSoft;
+            cursor: pointer;
+        }
+
+        &.selected {
+            background-color: v.$colorBase;
+
+            &:hover {
+                background-color: v.$colorPop;
+            }
+        }
+    }
+}

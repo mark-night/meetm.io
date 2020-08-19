@@ -1,0 +1,39 @@
+@use '../global/var' as v;
+@use '../global/mixin' as m;
+@use './megaFilterParts/upperInput' as input;
+@use './megaFilterParts/upperSelection' as selection;
+@use './megaFilterParts/dropdown' as dropdown;
+
+.megaFilter {
+    position: relative;
+    margin-top: 2rem;
+
+    &__upper {
+        background-color: #fff;
+        min-height: 3rem;
+        padding: 0.5rem;
+        border-radius: 10px 10px 0 0;
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+
+        @include m.tiny-width {
+            grid-template-columns: 1fr;
+        }
+
+        &__input {
+            @include input.upper-input;
+        }
+
+        &__selection {
+            @include m.tiny-width {
+                margin-top: 1rem;
+            }
+
+            @include selection.selection;
+        }
+    }
+
+    &__dropdown {
+        @include dropdown.dropdown;
+    }
+}

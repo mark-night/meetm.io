@@ -6,3 +6,35 @@
         border: none;
     }
 }
+
+@mixin big-soft-shadow {
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+}
+
+@mixin thin-soft-shadow {
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+@mixin medium-width {
+    @media (max-width: 1024px) {
+        & {
+            @content;
+        }
+    }
+}
+
+@mixin small-width {
+    @media (max-width: 768px) {
+        & {
+            @content;
+        }
+    }
+}
+
+@mixin tiny-width {
+    @media (max-width: 480px) {
+        & {
+            @content;
+        }
+    }
+}

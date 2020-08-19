@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { updateFilterTerms } from '../../store/actions/filterActions';
 
-const InputFilter = props => {
+const FilterInput = props => {
   const TIME_TO_WAIT_FOR_INPUT = 300;
   const [term, setTerm] = useState('');
   const dispatch = useDispatch();
@@ -20,18 +20,19 @@ const InputFilter = props => {
   }, [term, dispatch]);
 
   return (
-    <input
-      type="text"
-      className={props.className}
-      placeholder="Filter projects with keywords seperated by comma..."
-      value={term}
-      onChange={e => setTerm(e.target.value)}
-    />
+    <div className={props.className}>
+      <input
+        type="text"
+        placeholder="Filter projects with keywords seperated by comma..."
+        value={term}
+        onChange={e => setTerm(e.target.value)}
+      />
+    </div>
   );
 };
 
-InputFilter.propTypes = {
+FilterInput.propTypes = {
   className: PropTypes.string,
 };
 
-export default InputFilter;
+export default FilterInput;

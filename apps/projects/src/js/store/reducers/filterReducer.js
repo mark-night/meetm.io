@@ -9,7 +9,7 @@ export default (state = {}, action) => {
   const { type, payload } = action;
   switch (type) {
     case FETCH_PROJS:
-      return { ...state, categories: payload.categories, tags: payload.tags };
+      return { ...state, tags: payload.tags };
     case UPDATE_FILTER_TERMS:
       return { ...state, terms: payload };
     case UPDATE_FILTER_SELECTIONS:

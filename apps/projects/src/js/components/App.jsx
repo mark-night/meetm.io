@@ -2,8 +2,8 @@ import { hot } from 'react-hot-loader/root';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { FETCH_PROJS } from '../shared/_constant';
+import Filter from './Filter';
 import Carousel from './Carousel';
-import Header from './Header';
 
 const App = () => {
   // hooks way to "connect" component to store
@@ -21,7 +21,7 @@ const App = () => {
 
   return (
     <div>
-      <Header />
+      <Filter />
       <Carousel />
     </div>
   );

@@ -8,14 +8,17 @@ export const filterProjs = (projs, filters) => {
     // assemble all parts into a single string to simplify searching
     const projStr = [
       proj.title,
-      ...proj.tags,
       proj.category,
+      ...proj.languages,
+      ...proj.frameworks,
+      ...proj.tools,
+      ...proj.concepts,
       proj.desc_short,
       proj.desc_long,
     ]
       .join(' ')
       .toLowerCase();
-    return filters.every(filter => projStr.includes(filter));
+    return filters.every(filter => projStr.includes(filter.toLowerCase()));
   });
   return { type: FILTER_PROJS, payload: projs };
 };

@@ -2,7 +2,7 @@ export const parseStrArr = arr => {
   /**
    * take in a string array, if any item is "included" by any other
    * item of the same array, remove this included item from the array.
-   * finally, return the "cleaned" array.
+   * finally, return the "cleaned" array. Case is sensitive.
    */
   // remove duplicates
   const occur = {};
@@ -11,7 +11,6 @@ export const parseStrArr = arr => {
     if (item === '') {
       continue;
     }
-    item = item.toLowerCase();
     if (!occur[item]) {
       occur[item] = true;
     }
@@ -37,4 +36,11 @@ export const parseStrArr = arr => {
     }
   }
   return parsed;
+};
+
+export const removeArrFromArr = (arr1, arr2) => {
+  /**
+   * remove all values of arr1 from arr2
+   */
+  return arr2.filter(value => arr1.every(el => el !== value));
 };
