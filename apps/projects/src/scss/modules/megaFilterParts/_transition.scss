@@ -1,0 +1,76 @@
+@use '../../global/var' as v;
+@use '../../global/function' as f;
+
+// simple fade in/out at different durations
+@each $duration in (v.$tran-dur-fast, v.$tran-dur-normal) {
+    .#{v.$tran-class-fade}-#{f.num-to-class($duration)} {
+        &-enter {
+            opacity: 0;
+
+            &-active {
+                opacity: 1;
+                transition: opacity $duration;
+            }
+        }
+
+        &-exit {
+            opacity: 1;
+
+            &-active {
+                opacity: 0;
+                transition: opacity $duration;
+            }
+        }
+    }
+}
+
+// slide in from left and slide out to left, at fast speed
+.megaFilter__center__selections__options__option {
+    &-enter {
+        max-width: 0;
+        opacity: 0;
+
+        &-active {
+            max-width: 10rem;
+            opacity: 1;
+            transition: all v.$tran-dur-fast;
+        }
+    }
+
+    &-exit {
+        max-width: 10rem;
+        opacity: 1;
+
+        &-active {
+            max-width: 0;
+            opacity: 0;
+            transition: all v.$tran-dur-fast;
+        }
+    }
+}
+
+// slide down from up and slide back up
+$transitions-slide-udu: 'megaFilter__center__selections' 5rem v.$tran-dur-normal,
+    'megaFilter__bottom__dropdown' 50vh v.$tran-dur-normal;
+
+@each $component, $max-height, $duration in $transitions-slide-udu {
+    .transition-wrapper.#{$component} {
+        &-enter {
+            max-height: 0;
+            transition: max-height $duration ease-in-out;
+
+            &-active {
+                max-height: $max-height;
+            }
+        }
+
+        &-exit {
+            max-height: $max-height;
+
+            &-active {
+                max-height: 0;
+                transition: max-height $duration ease-in-out;
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+@use '../../global/var' as v;
+
+@mixin dropdown-toggle {
+    position: relative;
+    height: 1.5rem;
+    cursor: pointer;
+    transform: rotateX(0deg);
+    transition: transform v.$tran-dur-normal 100ms;
+
+    &.closed {
+        transform: rotateX(180deg);
+        transition: transform v.$tran-dur-normal 100ms;
+    }
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 70%;
+        height: 70%;
+        left: 15%;
+        top: 15%;
+        transform: rotate(45deg) translate(15%, 15%);
+        border-left: 1px solid v.$color-dark;
+        border-top: 1px solid v.$color-dark;
+    }
+
+    &:hover::before {
+        transform: rotate(45deg) translate(12%, 12%);
+        border-left: 3px solid v.$color-base;
+        border-top: 3px solid v.$color-base;
+    }
+}

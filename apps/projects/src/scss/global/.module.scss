@@ -1,0 +1,17 @@
+// ways to share scss variables to JS:
+// https://github.com/webpack-contrib/css-loader#auto
+// export in seperate file to prevent being redundantly imported/exported in stylesheet
+
+@use './var' as v;
+@use './function' as f;
+
+:export {
+    dur_slow: f.trim-unit(v.$tran-dur-slow);
+    dur_normal: f.trim-unit(v.$tran-dur-normal);
+    dur_fast: f.trim-unit(v.$tran-dur-fast);
+    class_fade: v.$tran-class-fade;
+    class_slide: v.$tran-class-slide;
+    left_right_left: v.$left-right-left;
+    up_down_up: v.$up-down-up;
+    right_left_right: v.$right-left-right;
+}

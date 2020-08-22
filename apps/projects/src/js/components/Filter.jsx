@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import FilterInput from './filterParts/FilterInput';
 import SelectionStack from './filterParts/SelectionStack';
 import FilterDropdown from './filterParts/FilterDropdown';
+import DropdownToggle from './filterParts/DropdownToggle';
 
-const Filter = props => {
+const Filter = () => {
   const classBase = 'megaFilter';
 
   return (
-    <div className="wrapper">
-      <div className={classBase}>
-        <div className={`${classBase}__upper`}>
-          <FilterInput className={`${classBase}__upper__input`} />
-          <SelectionStack className={`${classBase}__upper__selection`} />
-        </div>
-        <FilterDropdown className={`${classBase}__dropdown`} />
+    <div className={`${classBase} wrapper`}>
+      <div className={`${classBase}__top`}>
+        <FilterInput className={`${classBase}__top__input`} />
+        <DropdownToggle className={`${classBase}__top__toggle`} />
+      </div>
+      <div className={`${classBase}__center`}>
+        <SelectionStack className={`${classBase}__center__selections`} />
+      </div>
+      <div className={`${classBase}__bottom`}>
+        <FilterDropdown className={`${classBase}__bottom__dropdown`} />
       </div>
     </div>
   );
-};
-
-Filter.propTypes = {
-  className: PropTypes.string,
 };
 
 export default Filter;

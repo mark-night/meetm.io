@@ -1,12 +1,15 @@
 @use './var' as v;
 @use './mixin' as m;
 
+* {
+    box-sizing: border-box;
+}
+
 html,
 body {
     margin: 0;
-    box-sizing: border-box;
-    background-color: v.$white;
-    font-family: v.$fontSansSerif;
+    background-color: v.$color-white;
+    font-family: v.$font-sans-serif;
 }
 
 ul {
@@ -24,14 +27,9 @@ li {
 }
 
 .wrapper {
-    max-width: 1200px;
+    max-width: v.$width-content-max;
     margin: 0 auto;
     padding: 0 1rem;
-
-    // @include m.medium-width {
-    //     margin-left: 1rem;
-    //     margin-right: 1rem;
-    // }
 
     &--max {
         max-width: 100vw;

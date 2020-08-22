@@ -1,0 +1,26 @@
+@use '../../global/var' as v;
+@use '../../global/mixin' as m;
+
+@mixin input {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 1.5rem;
+    border-right: 1px solid v.$color-pale;
+
+    &__texts {
+        @include m.remove-default-outline;
+
+        font-family: v.$font-sans-serif;
+        font-size: 1.2rem;
+        line-height: 1;
+        width: 100%;
+    }
+
+    &__clear {
+        margin: 0 1rem;
+        flex: 0 0 1.5rem;
+
+        @include m.close-button($size: 1.5rem);
+    }
+}

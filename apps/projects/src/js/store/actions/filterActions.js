@@ -1,18 +1,20 @@
 import {
   UPDATE_FILTER_TERMS,
   UPDATE_FILTER_SELECTIONS,
-  UPDATE_FILTER_FILTERS,
-  NONE,
+  OPEN_FILTER_DROPDOWN,
   ALL,
 } from '../../shared/_constant';
 import { filterProjs } from './projActions';
 import { parseStrArr, removeArrFromArr } from '../../shared/_utility';
 
-export const updateFilterTerms = term => (dispatch, getState) => {
+export const openFilterDropdown = open => {
+  return { type: OPEN_FILTER_DROPDOWN, payload: open };
+};
+
+export const updateFilterTerms = term => dispatch => {
   const terms = parseStrArr(term.split(','));
   dispatch({ type: UPDATE_FILTER_TERMS, payload: terms });
-
-  updateFiltersAndFilterProjs(terms, dispatch, getState());
+  dispatch(filterProjs());
 };
 
 export const updateFilterSelections = (selections, add = true) => (
@@ -40,18 +42,7 @@ export const updateFilterSelections = (selections, add = true) => (
 
   newSelections = parseStrArr(newSelections);
   dispatch({ type: UPDATE_FILTER_SELECTIONS, payload: newSelections });
-
-  updateFiltersAndFilterProjs(selections, dispatch, state);
-};
-
-const updateFiltersAndFilterProjs = (updateWith, dispatch, state) => {
-  const terms = state.filter.terms || [];
-  const selections = state.filter.selections || [];
-  const filters = parseStrArr([...terms, ...selections, ...updateWith]);
-  dispatch({ type: UPDATE_FILTER_FILTERS, payload: filters });
-
-  let all = state.project.all || [];
-  dispatch(filterProjs(all, filters));
+  dispatch(filterProjs());
 };
 
 const convertStringSelections = (selections, state, excludedTags) => {
@@ -65,8 +56,6 @@ const convertStringSelections = (selections, state, excludedTags) => {
         }
       });
       selections = [...allTags];
-    } else if (selections === NONE) {
-      selections = [];
     } else {
       selections = [selections];
     }

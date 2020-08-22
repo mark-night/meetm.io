@@ -1,3 +1,5 @@
+@use './var' as v;
+
 @mixin remove-default-outline {
     &,
     &:focus,
@@ -16,7 +18,7 @@
 }
 
 @mixin medium-width {
-    @media (max-width: 1024px) {
+    @media (max-width: v.$screen-medium) {
         & {
             @content;
         }
@@ -24,7 +26,7 @@
 }
 
 @mixin small-width {
-    @media (max-width: 768px) {
+    @media (max-width: v.$screen-small) {
         & {
             @content;
         }
@@ -32,9 +34,47 @@
 }
 
 @mixin tiny-width {
-    @media (max-width: 480px) {
+    @media (max-width: v.$screen-tiny) {
         & {
             @content;
+        }
+    }
+}
+
+@mixin close-button(
+    $size: 100%,
+    $line-thickness: 1px,
+    $line-thickness-on-hover: 3px,
+    $color-normal: v.$color-dark,
+    $color-hover: v.$color-pop
+) {
+    display: block;
+    width: $size;
+    height: $size;
+    position: relative;
+    cursor: pointer;
+
+    &::before,
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        height: $line-thickness;
+        background-color: $color-normal;
+        transform: translateY(-50%) rotate(45deg);
+    }
+
+    &::after {
+        transform: translateY(-50%) rotate(-45deg);
+    }
+
+    &:hover {
+        &::before,
+        &::after {
+            height: $line-thickness-on-hover;
+            background-color: $color-hover;
         }
     }
 }

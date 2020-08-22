@@ -1,39 +1,90 @@
 @use '../global/var' as v;
 @use '../global/mixin' as m;
-@use './megaFilterParts/upperInput' as input;
-@use './megaFilterParts/upperSelection' as selection;
-@use './megaFilterParts/dropdown' as dropdown;
+@use './megaFilterParts/transition';
+@use './megaFilterParts/topInput' as input;
+@use './megaFilterParts/centerSelectionsOptions' as options;
+@use './megaFilterParts/bottomDropdown' as dropdown;
+@use './megaFilterParts/topDropdownToggle' as dropdown-toggle;
 
 .megaFilter {
-    position: relative;
     margin-top: 2rem;
+    min-width: 288px;
 
-    &__upper {
+    &__top {
         background-color: #fff;
-        min-height: 3rem;
-        padding: 0.5rem;
-        border-radius: 10px 10px 0 0;
+        padding: 1rem 2rem;
+        border-radius: 10px;
         display: grid;
-        grid-template-columns: 2fr 3fr;
-
-        @include m.tiny-width {
-            grid-template-columns: 1fr;
-        }
+        align-items: center;
+        grid-template-columns: auto 1.5rem;
+        gap: 1rem;
 
         &__input {
-            @include input.upper-input;
+            @include input.input;
         }
 
-        &__selection {
-            @include m.tiny-width {
-                margin-top: 1rem;
-            }
-
-            @include selection.selection;
+        &__toggle {
+            @include dropdown-toggle.dropdown-toggle;
         }
     }
 
-    &__dropdown {
-        @include dropdown.dropdown;
+    &__center {
+        margin-top: 1rem;
+
+        .transition-wrapper {
+            overflow: hidden;
+        }
+
+        &__selections {
+            display: grid;
+            grid-template-columns: 1fr 1.5rem;
+            gap: 1rem;
+            align-items: center;
+            background-color: #fff;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            transition: border-radius v.$tran-dur-normal;
+
+            &.dropdown-opened {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            &__options {
+                @include options.options;
+            }
+
+            &__clear {
+                @include m.close-button($size: 1.5rem);
+            }
+        }
+    }
+
+    &__bottom {
+        position: relative;
+
+        .transition-wrapper {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            overflow: hidden;
+        }
+
+        &__dropdown {
+            border-radius: 10px;
+            border-top-style: solid;
+            border-top-color: v.$color-pale;
+            border-top-width: 0;
+            transition: all v.$tran-dur-normal;
+
+            &.with-selections {
+                border-top-width: 1px;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+
+            @include dropdown.dropdown;
+        }
     }
 }

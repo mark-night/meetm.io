@@ -1,48 +1,44 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { updateFilterSelections } from '../../store/actions/filterActions.js';
+import { DUR_NORMAL } from '../../shared/_constant';
 
 const FilterDropdown = props => {
-  const { className } = props;
-  const selections = useSelector(state => state.filter.selections || []);
+  const className = props.className;
   const tags = useSelector(state => state.filter.tags || {});
-  const dispatch = useDispatch();
+  const open = useSelector(state => state.filter.open && true);
+  const selections = useSelector(state => state.filter.selections || []);
 
-  const handleOptionClick = e => {
-    const selection = e.target.getAttribute('proj-tag');
-    selections.includes(selection)
-      ? dispatch(updateFilterSelections(selection, false))
-      : dispatch(updateFilterSelections(selection));
-  };
-
-  const optionGroups_jsx = Object.keys(tags).map(optionGroup => {
-    const options_jsx = tags[optionGroup].map(option => {
-      const selectStatus = selections.includes(option) ? 'selected' : '';
-      return (
-        <li
-          key={option}
-          className={`${className}__option ${selectStatus}`}
-          onClick={handleOptionClick}
-          proj-tag={option}
+  return (
+    <CSSTransition
+      in={open}
+      classNames={className}
+      timeout={DUR_NORMAL}
+      unmountOnExit
+    >
+      <div className="transition-wrapper">
+        <ul
+          className={`${className} ${
+            selections.length > 0 ? 'with-selections' : ''
+          }`}
         >
-          {option}
-        </li>
-      );
-    });
-    return (
-      <li
-        key={optionGroup.toLowerCase()}
-        className={`${className}__optionGroup`}
-      >
-        <ul>
-          <li className={`${className}__label`}>{optionGroup}</li>
-          {options_jsx}
+          {Object.keys(tags).map(tagGroup => {
+            return (
+              <li key={tagGroup} className={`${className}__optionGroup`}>
+                <FilterOptionGroup
+                  className={className}
+                  options={tags[tagGroup]}
+                  groupLabel={tagGroup}
+                />
+              </li>
+            );
+          })}
         </ul>
-      </li>
-    );
-  });
-  return <ul className={className}>{optionGroups_jsx}</ul>;
+      </div>
+    </CSSTransition>
+  );
 };
 
 FilterDropdown.propTypes = {
@@ -50,3 +46,33 @@ FilterDropdown.propTypes = {
 };
 
 export default FilterDropdown;
+
+const FilterOptionGroup = props => {
+  const selections = useSelector(state => state.filter.selections || []);
+  const dispatch = useDispatch();
+  return (
+    <ul>
+      <li className={`${props.className}__label`}>{props.groupLabel}</li>
+      {props.options.map(option => {
+        const selected = selections.includes(option);
+        return (
+          <li
+            key={option}
+            className={`${props.className}__option ${
+              selected ? 'selected' : ''
+            }`}
+            onClick={() => dispatch(updateFilterSelections(option, !selected))}
+          >
+            {option}
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
+
+FilterOptionGroup.propTypes = {
+  groupLabel: PropTypes.string,
+  options: PropTypes.arrayOf(PropTypes.string),
+  className: PropTypes.string,
+};

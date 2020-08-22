@@ -1,26 +1,38 @@
 import { FILTER_PROJS, PICK_PROJ } from '../../shared/_constant';
 
-export const filterProjs = (projs, filters) => {
-  if (filters.length === 0 || projs.length === 0) {
-    return { type: FILTER_PROJS, payload: projs };
+export const filterProjs = () => (dispatch, getState) => {
+  const state = getState();
+  let projs = state.project.all || [];
+  const terms = state.filter.terms || [];
+  const selections = state.filter.selections || [];
+  if (projs.length === 0 || selections.length + terms.length === 0) {
+    dispatch({ type: FILTER_PROJS, payload: projs });
+    return;
   }
+
+  // filter against selections
   projs = projs.filter(proj => {
-    // assemble all parts into a single string to simplify searching
-    const projStr = [
-      proj.title,
+    const projTags = [
       proj.category,
       ...proj.languages,
       ...proj.frameworks,
       ...proj.tools,
       ...proj.concepts,
-      proj.desc_short,
-      proj.desc_long,
-    ]
+    ];
+    return selections.every(selection => projTags.includes(selection));
+  });
+
+  // filter against terms
+  projs = projs.filter(proj => {
+    // assemble all parts into a single string to simplify searching
+    // check after lower cased to make it case insensitive
+    const projStr = [proj.title, proj.desc_short, proj.desc_long]
       .join(' ')
       .toLowerCase();
-    return filters.every(filter => projStr.includes(filter.toLowerCase()));
+    return terms.every(term => projStr.includes(term.toLowerCase()));
   });
-  return { type: FILTER_PROJS, payload: projs };
+
+  dispatch({ type: FILTER_PROJS, payload: projs });
 };
 
 export const pickProj = proj => {
