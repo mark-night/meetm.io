@@ -10,6 +10,7 @@ class Tag(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ('tag', )
 
 
 class Category(Tag):
@@ -48,6 +49,9 @@ class Project(models.Model):
     proj_url = URLOrRelativeURLField()
     code_url = models.URLField(max_length=300, blank=True)
     publish = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('title', 'category')
 
     def __str__(self):
         return self.title

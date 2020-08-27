@@ -7,8 +7,11 @@ import Filter from './Filter';
 import Carousel from './Carousel';
 
 const App = () => {
-  // hooks way to "connect" component to store
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = 'Projects | meetm.io';
+  }, []);
 
   useEffect(() => {
     const getProjs = async () => {

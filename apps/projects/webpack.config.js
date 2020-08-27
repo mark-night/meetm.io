@@ -52,6 +52,11 @@ const config = {
         },
       },
       {
+        test: /\.jsx?$/i,
+        include: /node_modules/,
+        use: 'react-hot-loader/webpack',
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)$/i,
         use: {
           loader: 'url-loader',

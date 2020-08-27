@@ -8,7 +8,6 @@
 
 .megaFilter {
     margin-top: 2rem;
-    min-width: 288px;
 
     &__top {
         background-color: #fff;
@@ -31,7 +30,7 @@
     &__center {
         margin-top: 1rem;
 
-        .transition-wrapper {
+        & .transition-wrapper {
             overflow: hidden;
         }
 
@@ -41,13 +40,12 @@
             gap: 1rem;
             align-items: center;
             background-color: #fff;
-            padding: 0.75rem 2rem;
-            border-radius: 10px;
+            padding: 0.75rem 1.75rem;
+            border-radius: 10px 10px 10px 10px;
             transition: border-radius v.$tran-dur-normal;
 
             &.dropdown-opened {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
+                border-radius: 10px 10px 0 0;
             }
 
             &__options {
@@ -63,27 +61,28 @@
     &__bottom {
         position: relative;
 
-        .transition-wrapper {
+        & .transition-wrapper {
+            @include m.big-soft-shadow;
+
             position: absolute;
             left: 0;
             right: 0;
             top: 0;
+            z-index: 1;
             overflow: hidden;
-        }
-
-        &__dropdown {
-            border-radius: 10px;
             border-top-style: solid;
             border-top-color: v.$color-pale;
             border-top-width: 0;
+            border-radius: 10px 10px 10px 10px;
             transition: all v.$tran-dur-normal;
 
             &.with-selections {
                 border-top-width: 1px;
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
+                border-radius: 0 0 10px 10px;
             }
+        }
 
+        &__dropdown {
             @include dropdown.dropdown;
         }
     }

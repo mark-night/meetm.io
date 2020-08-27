@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { openFilterDropdown } from '../../store/actions/filterActions.js';
-import { FILTER_DROPDOWN_TOGGLED } from '../../shared/_constant';
+import { toggleFilterDropdown } from '../../store/actions/statusActions';
 
 const DropdownToggle = props => {
-  const open = useSelector(state => state.filter.open);
+  const open = useSelector(state => state.status.filterDropdown_open);
   const dispatch = useDispatch();
   return (
     <div
       className={`${props.className} ${open ? 'opened' : 'closed'}`}
       onClick={() => {
-        dispatch(openFilterDropdown(!open));
-        dispatch({ type: FILTER_DROPDOWN_TOGGLED });
+        dispatch(toggleFilterDropdown(!open));
+        props.onToggle();
       }}
     ></div>
   );
@@ -20,6 +19,7 @@ const DropdownToggle = props => {
 
 DropdownToggle.propTypes = {
   className: PropTypes.string,
+  onToggle: PropTypes.func,
 };
 
 export default DropdownToggle;

@@ -2,8 +2,6 @@
 @use '../../global/mixin' as m;
 
 @mixin dropdown {
-    @include m.big-soft-shadow;
-
     padding: 1rem 2rem;
     background-color: #fff;
     max-height: 50vh;

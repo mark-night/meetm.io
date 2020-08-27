@@ -44,3 +44,22 @@ export const removeArrFromArr = (arr1, arr2) => {
    */
   return arr2.filter(value => arr1.every(el => el !== value));
 };
+
+export const normalizeIndex = (index, arr) => {
+  /**
+   * Given an array "arr" and an int number "index", return a normalized index
+   * that is valid for "arr"
+   */
+  const total = arr.length;
+  if (total === 0) {
+    return 0;
+  }
+  let indexNormalized = index;
+  if (index >= total) {
+    indexNormalized = index % total;
+  } else if (index < 0) {
+    // the extra mod is necessary when index is divisible by total
+    indexNormalized = ((index % total) + total) % total;
+  }
+  return indexNormalized;
+};

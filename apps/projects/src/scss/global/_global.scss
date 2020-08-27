@@ -27,11 +27,12 @@ li {
 }
 
 .wrapper {
-    max-width: v.$width-content-max;
+    max-width: v.$width-content-normal;
+    min-width: 288px;
     margin: 0 auto;
     padding: 0 1rem;
 
     &--max {
-        max-width: 100vw;
+        max-width: v.$width-content-max;
     }
 }

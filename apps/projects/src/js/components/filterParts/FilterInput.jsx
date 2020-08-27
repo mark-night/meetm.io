@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  updateFilterTerms,
-  openFilterDropdown,
-} from '../../store/actions/filterActions';
+import { updateFilterTerms } from '../../store/actions/filterActions';
+import { toggleFilterDropdown } from '../../store/actions/statusActions';
 import ClearCross from '../ClearCross';
 
 const FilterInput = props => {
   const TIME_TO_WAIT_FOR_INPUT = 300;
   const [term, setTerm] = useState('');
   const selections = useSelector(state => state.filter.selections || []);
-  const open = useSelector(state => state.filter.open);
-  const toggled = useSelector(state => state.filter.toggled && true);
+  const open = useSelector(state => state.status.filterDropdown_open);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,8 +32,8 @@ const FilterInput = props => {
         className={`${props.className}__texts`}
         onChange={e => setTerm(e.target.value)}
         onFocus={() => {
-          if (selections.length === 0 && !open && !toggled) {
-            dispatch(openFilterDropdown(true));
+          if (props.triggerDropdown && selections.length === 0 && !open) {
+            dispatch(toggleFilterDropdown(true));
           }
         }}
       />
@@ -51,6 +48,7 @@ const FilterInput = props => {
 
 FilterInput.propTypes = {
   className: PropTypes.string,
+  triggerDropdown: PropTypes.bool,
 };
 
 export default FilterInput;

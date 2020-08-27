@@ -41,6 +41,22 @@
     }
 }
 
+@mixin landscape {
+    @media (orientation: landscape) {
+        & {
+            @content;
+        }
+    }
+}
+
+@mixin portrait {
+    @media (orientation: portrait) {
+        & {
+            @content;
+        }
+    }
+}
+
 @mixin close-button(
     $size: 100%,
     $line-thickness: 1px,

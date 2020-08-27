@@ -10,8 +10,9 @@
     dur_normal: f.trim-unit(v.$tran-dur-normal);
     dur_fast: f.trim-unit(v.$tran-dur-fast);
     class_fade: v.$tran-class-fade;
-    class_slide: v.$tran-class-slide;
-    left_right_left: v.$left-right-left;
-    up_down_up: v.$up-down-up;
-    right_left_right: v.$right-left-right;
+    carousel_prev: v.$carousel-prev;
+    carousel_center: v.$carousel-center;
+    carousel_next: v.$carousel-next;
+    carousel_off_prev: v.$carousel-off-prev;
+    carousel_off_next: v.$carousel-off-next;
 }

@@ -2,10 +2,17 @@ import { FILTER_PROJS, PICK_PROJ } from '../../shared/_constant';
 
 export const filterProjs = () => (dispatch, getState) => {
   const state = getState();
-  let projs = state.project.all || [];
+  let projs = state.meta.projects || [];
   const terms = state.filter.terms || [];
   const selections = state.filter.selections || [];
-  if (projs.length === 0 || selections.length + terms.length === 0) {
+
+  if (projs.length === 0) {
+    // Either failed fetching projects meta data, or filterProjs() was called too
+    // early (within terms update)
+    return;
+  }
+
+  if (selections.length === 0 && terms.length === 0) {
     dispatch({ type: FILTER_PROJS, payload: projs });
     return;
   }

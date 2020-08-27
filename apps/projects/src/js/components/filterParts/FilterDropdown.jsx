@@ -1,48 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { updateFilterSelections } from '../../store/actions/filterActions.js';
-import { DUR_NORMAL } from '../../shared/_constant';
+import { toggleFilterDropdown } from '../../store/actions/statusActions.js';
 
 const FilterDropdown = props => {
   const className = props.className;
-  const tags = useSelector(state => state.filter.tags || {});
-  const open = useSelector(state => state.filter.open && true);
+  const tags = useSelector(state => state.meta.tags || {});
+  const open = useSelector(state => state.status.filterDropdown_open && true);
   const selections = useSelector(state => state.filter.selections || []);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // clicking outside the megaFilter closes it if it is open
+    const closeDropdown = e =>
+      !props.topNode.current.contains(e.target) &&
+      dispatch(toggleFilterDropdown(open && false));
+    document.addEventListener('click', closeDropdown);
+
+    return () => document.removeEventListener('click', closeDropdown);
+  });
 
   return (
-    <CSSTransition
-      in={open}
-      classNames={className}
-      timeout={DUR_NORMAL}
-      unmountOnExit
+    <div
+      className={`transition-wrapper ${
+        selections.length > 0 ? 'with-selections' : ''
+      }`}
     >
-      <div className="transition-wrapper">
-        <ul
-          className={`${className} ${
-            selections.length > 0 ? 'with-selections' : ''
-          }`}
-        >
-          {Object.keys(tags).map(tagGroup => {
-            return (
-              <li key={tagGroup} className={`${className}__optionGroup`}>
-                <FilterOptionGroup
-                  className={className}
-                  options={tags[tagGroup]}
-                  groupLabel={tagGroup}
-                />
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </CSSTransition>
+      <ul className={`${className}`}>
+        {Object.keys(tags).map(tagGroup => {
+          return (
+            <li key={tagGroup} className={`${className}__optionGroup`}>
+              <FilterOptionGroup
+                className={className}
+                options={tags[tagGroup]}
+                groupLabel={tagGroup}
+              />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
 
 FilterDropdown.propTypes = {
   className: PropTypes.string,
+  topNode: PropTypes.object,
 };
 
 export default FilterDropdown;
