@@ -57,6 +57,12 @@
     }
 }
 
+@mixin portrait-prism {
+    @media (max-aspect-ratio: v.$ratio-switch) {
+        @content;
+    }
+}
+
 @mixin close-button(
     $size: 100%,
     $line-thickness: 1px,

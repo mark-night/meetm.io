@@ -39,6 +39,13 @@ const config = {
             options: { keepQuery: true },
           },
           {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+              plugins: [require('autoprefixer')],
+            },
+          },
+          {
             loader: 'sass-loader',
             options: { sourceMap: true },
           },

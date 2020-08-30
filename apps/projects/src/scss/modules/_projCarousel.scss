@@ -1,6 +1,8 @@
 @use './projCarouselParts/transition';
 @use '../global/var' as v;
 @use '../global/mixin' as m;
+@use './projCarouselParts/projs' as projs;
+@use './projCarouselParts/proj' as proj;
 
 .delete-me {
     position: fixed;
@@ -44,73 +46,11 @@
         }
     }
 
-    & > .transition-wrapper {
-        // background-color: green;
-    }
-
     &__projs {
-        position: relative;
-        margin-top: 5rem;
-        height: 45vh;
-        overflow: hidden;
+        @include projs.projs;
 
         &__proj {
-            display: inline-block;
-            position: absolute;
-            bottom: 0;
-            height: 45%;
-            cursor: pointer;
-            background-color: v.$color-base;
-            // variables shared only here
-            $gap: 1%;
-            $width-available: 100% - 2 * $gap;
-            $share-of-center: 5 / 10;
-            $width-center: $width-available * $share-of-center;
-            $width-others: ($width-available - $width-center) / 2;
-            // properties participate in transitions
-            width: $width-others;
-            opacity: 1;
-
-            &.#{v.$carousel-off-prev} {
-                opacity: 0;
-                left: -2 * $gap;
-                transform: translateX(-100%);
-                transition: all v.$tran-dur-slow;
-            }
-
-            &.#{v.$carousel-prev} {
-                transform: translateX(0);
-                left: 0;
-                transition: all v.$tran-dur-slow;
-            }
-
-            &.#{v.$carousel-center} {
-                width: $width-center;
-                height: 100%;
-                left: 50%;
-                transform: translateX(-50%);
-                transition: all v.$tran-dur-slow;
-            }
-
-            &.#{v.$carousel-next} {
-                left: $width-others + $gap + $width-center + $gap;
-                transform: translateX(0);
-                transition: all v.$tran-dur-slow;
-            }
-
-            &.#{v.$carousel-off-next} {
-                opacity: 0;
-                left: 100% + 2 * $gap;
-                transform: translateX(0);
-                transition: all v.$tran-dur-slow;
-            }
-
-            & img {
-                width: 100%;
-                height: 100%;
-                object-position: center center;
-                object-fit: cover;
-            }
+            @include proj.proj;
         }
     }
 }

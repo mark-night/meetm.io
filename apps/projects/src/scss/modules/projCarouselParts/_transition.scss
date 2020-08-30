@@ -1,7 +1,9 @@
 @use '../../global/var' as v;
+@use '../../global//mixin' as m;
+@use './projs' as projs;
 
-.carousel {
-    &-message {
+.carousel .transition {
+    &__message {
         &-enter {
             opacity: 0;
 
@@ -21,7 +23,7 @@
         }
     }
 
-    &-projs {
+    &__projs {
         &-enter {
             opacity: 0;
             transform: scale(0);
@@ -29,7 +31,7 @@
             &-active {
                 opacity: 1;
                 transform: scale(1);
-                transition: all v.$tran-dur-slow;
+                transition: all v.$tran-dur-fast;
             }
         }
 
@@ -40,7 +42,27 @@
             &-active {
                 opacity: 0;
                 transform: scale(0);
-                transition: all v.$tran-dur-slow;
+                transition: all v.$tran-dur-fast;
+            }
+        }
+    }
+
+    &__proj {
+        &-enter {
+            opacity: 0;
+
+            &-active {
+                opacity: projs.$prism-face-ready-opacity;
+                transition: opacity v.$tran-dur-fast;
+            }
+        }
+
+        &-exit {
+            opacity: projs.$prism-face-ready-opacity;
+
+            &-active {
+                opacity: 0;
+                transition: opacity v.$tran-dur-fast;
             }
         }
     }

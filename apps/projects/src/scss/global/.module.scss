@@ -2,6 +2,7 @@
 // https://github.com/webpack-contrib/css-loader#auto
 // export in seperate file to prevent being redundantly imported/exported in stylesheet
 
+@use 'sass:string';
 @use './var' as v;
 @use './function' as f;
 
@@ -10,9 +11,8 @@
     dur_normal: f.trim-unit(v.$tran-dur-normal);
     dur_fast: f.trim-unit(v.$tran-dur-fast);
     class_fade: v.$tran-class-fade;
-    carousel_prev: v.$carousel-prev;
-    carousel_center: v.$carousel-center;
-    carousel_next: v.$carousel-next;
-    carousel_off_prev: v.$carousel-off-prev;
-    carousel_off_next: v.$carousel-off-next;
+    pose_up: v.$pose-up;
+    pose_front: v.$pose-front;
+    pose_down: v.$pose-down;
+    ratio_switch: string.unquote(v.$ratio-switch);
 }

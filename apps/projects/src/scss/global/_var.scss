@@ -12,19 +12,21 @@ $color-white: #e8edf1;
 $color-black: #03090e;
 
 $width-content-max: 1200px;
-$width-content-normal: 900px;
+$width-content-normal: 1024px;
+$width-content-medium: 900px;
 
 $screen-medium: 1024px;
 $screen-small: 768px;
 $screen-tiny: 480px;
 
+// SYNC WITH JS
 // for transitions
 $tran-dur-slow: 1000ms;
 $tran-dur-normal: 400ms;
 $tran-dur-fast: 200ms;
 $tran-class-fade: tran-fade;
-$carousel-prev: prev;
-$carousel-center: center;
-$carousel-next: next;
-$carousel-off-prev: off-prev;
-$carousel-off-next: off-next;
+// for carousel prism
+$pose-up: pose-up;
+$pose-front: pose-front;
+$pose-down: pose-down;
+$ratio-switch: '85/100';

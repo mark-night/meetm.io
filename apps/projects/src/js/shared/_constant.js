@@ -19,13 +19,13 @@ export const DUR_FAST = parseInt(constants.dur_fast);
 export const CLASS_FADE = constants.class_fade;
 
 /**
- * CAROUSEL CARD POSITIONS
+ * CAROUSEL PRISM
  */
-export const CENTER = constants.carousel_center;
-export const PREV = constants.carousel_prev;
-export const NEXT = constants.carousel_next;
-export const OFF_PREV = constants.carousel_off_prev;
-export const OFF_NEXT = constants.carousel_off_next;
+export const POSE_FRONT = constants.pose_front;
+export const POSE_UP = constants.pose_up;
+export const POSE_DOWN = constants.pose_down;
+const [a, b] = constants.ratio_switch.split('/');
+export const RATIO_SWITCH = parseInt(a) / parseInt(b);
 
 /**
  * CAROUSEL/SLIDESHOW PLAY DIRECTION

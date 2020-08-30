@@ -8,30 +8,34 @@ const Carousel = () => {
   const filtered = useSelector(state => state.chosen.filtered);
   const classBase = 'carousel';
 
-  let key, classNames, jsxOutput;
+  let key,
+    classNames = 'transition',
+    jsxOutput;
   if (!filtered) {
     key = 'loading';
-    classNames = `${classBase}-message`;
+    classNames += '__message';
     jsxOutput = (
       <p className={`${classBase}__message`}>Loading projects data.</p>
     );
   } else if (filtered.length === 0) {
     key = 'no-match';
-    classNames = `${classBase}-message`;
+    classNames += '__message';
     jsxOutput = (
       <p className={`${classBase}__message`}>
         Nothing matched. <br />
-        Try lossing filter criteria.
+        Try loosing filter criteria.
       </p>
     );
   } else {
     key = 'carousel';
-    classNames = `${classBase}-projs`;
-    jsxOutput = <ProjsCarousel className={`${classBase}__projs`} />;
+    classNames += '__projs';
+    jsxOutput = (
+      <ProjsCarousel className={`${classBase}__projs`} projs={filtered} />
+    );
   }
 
   return (
-    <div className={`${classBase} wrapper wrapper--max`}>
+    <div className={`${classBase} wrapper`}>
       <SwitchTransition mode="out-in">
         <CSSTransition key={key} classNames={classNames} timeout={DUR_FAST}>
           {jsxOutput}

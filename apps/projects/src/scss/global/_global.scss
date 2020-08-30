@@ -35,4 +35,8 @@ li {
     &--max {
         max-width: v.$width-content-max;
     }
+
+    &--medium {
+        max-width: v.$width-content-medium;
+    }
 }

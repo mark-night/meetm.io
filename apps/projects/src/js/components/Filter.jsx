@@ -14,7 +14,7 @@ const Filter = () => {
   const ref = useRef(null);
 
   return (
-    <div className={`${classBase} wrapper`} ref={ref}>
+    <div className={`${classBase} wrapper wrapper--medium`} ref={ref}>
       <div className={`${classBase}__top`}>
         <FilterInput
           className={`${classBase}__top__input`}
