@@ -11,6 +11,7 @@ import {
   DUR_FAST,
 } from '../../shared/_constant';
 import { normalizeIndex } from '../../shared/_utility';
+import CarouselNav from './CarouselNav';
 import ProjCard from './ProjCard';
 
 const ProjsCarousel = props => {
@@ -97,14 +98,12 @@ const ProjsCarousel = props => {
             );
           })}
         </TransitionGroup>
-      </div>
-      <div className="delete-me">
-        <button onClick={() => roll(BACKWARD)}>-</button>
-        <h4>{normalizeIndex(steps - 1, props.projs)}</h4>
-        <h3>{steps}</h3>
-        <h4>{normalizeIndex(steps + 1, props.projs)}</h4>
-        <button onClick={() => roll(FORWARD)}>+</button>
-        <h4>Total: {props.projs.length}</h4>
+        <CarouselNav
+          className={`${props.className}__nav`}
+          rollCarousel={roll}
+          counts={props.projs.length}
+          current={normalizeIndex(steps, props.projs)}
+        />
       </div>
     </Fragment>
   );

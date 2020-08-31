@@ -2,30 +2,8 @@
 @use '../global/var' as v;
 @use '../global/mixin' as m;
 @use './projCarouselParts/projs' as projs;
+@use './projCarouselParts/carouselNav' as carousel-nav;
 @use './projCarouselParts/proj' as proj;
-
-.delete-me {
-    position: fixed;
-    left: 3rem;
-    bottom: 2rem;
-    display: flex;
-    align-items: center;
-
-    & h4,
-    & h3 {
-        line-height: 1;
-    }
-
-    & h4 {
-        margin: 0 2rem;
-    }
-
-    & button {
-        width: 4rem;
-        height: 2rem;
-        cursor: pointer;
-    }
-}
 
 .carousel {
     position: relative;
@@ -48,6 +26,8 @@
 
     &__projs {
         @include projs.projs;
+
+        @include carousel-nav.nav;
 
         &__proj {
             @include proj.proj;

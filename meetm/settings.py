@@ -69,6 +69,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_REGEX_WHITELIST = [
     r"^https?://localhost(:\d+)?$",
     r"^https?://127.0.0.1(:\d+)?$",
+    r"^https?://192.168.68.105(:\d+)?$",
 ]
 
 ROOT_URLCONF = 'meetm.urls'
