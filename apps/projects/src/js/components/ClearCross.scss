@@ -1,0 +1,61 @@
+@use '../../scss/global/var' as v;
+
+.clear-cross {
+    &.fast-fade {
+        &-enter {
+            opacity: 0;
+
+            &-active {
+                opacity: 1;
+                transition: opacity v.$tran-dur-fast;
+            }
+        }
+
+        &-exit {
+            opacity: 1;
+
+            &-active {
+                opacity: 0;
+                transition: opacity v.$tran-dur-fast;
+            }
+        }
+    }
+}
+
+@mixin cross(
+    $size: 100%,
+    $line-thickness: 1px,
+    $line-thickness-on-hover: 3px,
+    $color-normal: v.$color-dark,
+    $color-hover: v.$color-pop
+) {
+    display: block;
+    width: $size;
+    height: $size;
+    position: relative;
+    cursor: pointer;
+
+    &::before,
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        height: $line-thickness;
+        background-color: $color-normal;
+        transform: translateY(-50%) rotate(45deg);
+    }
+
+    &::after {
+        transform: translateY(-50%) rotate(-45deg);
+    }
+
+    &:hover {
+        &::before,
+        &::after {
+            height: $line-thickness-on-hover;
+            background-color: $color-hover;
+        }
+    }
+}

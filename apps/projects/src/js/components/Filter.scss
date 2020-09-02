@@ -1,0 +1,90 @@
+@use '../../scss/global/var' as v;
+@use '../../scss/global/mixin' as m;
+
+.megaFilter {
+    margin-top: 2rem;
+
+    &__top {
+        background-color: #fff;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        display: grid;
+        align-items: center;
+        grid-template-columns: auto 1.5rem;
+        gap: 1rem;
+    }
+
+    &__center {
+        margin-top: 1rem;
+
+        & .transition-wrapper {
+            overflow: hidden;
+
+            &.transition {
+                &-enter {
+                    max-height: 0;
+                    transition: max-height v.$tran-dur-normal ease-in-out;
+
+                    &-active {
+                        max-height: 5rem;
+                    }
+                }
+
+                &-exit {
+                    max-height: 5rem;
+
+                    &-active {
+                        max-height: 0;
+                        transition: max-height v.$tran-dur-normal ease-in-out;
+                    }
+                }
+            }
+        }
+    }
+
+    &__bottom {
+        position: relative;
+
+        & .transition-wrapper {
+            @include m.big-soft-shadow;
+
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            z-index: 1;
+            overflow: hidden;
+            border-top-style: solid;
+            border-top-color: v.$color-pale;
+            border-top-width: 0;
+            border-radius: 10px 10px 10px 10px;
+            transition: all v.$tran-dur-fast;
+
+            &.with-selections {
+                border-top-width: 1px;
+                border-radius: 0 0 10px 10px;
+            }
+
+            &.transition {
+                &-enter {
+                    max-height: 0;
+                    transition: max-height v.$tran-dur-fast ease-in-out;
+
+                    &-active {
+                        max-height: 50vh;
+                    }
+                }
+
+                &-exit {
+                    max-height: 50vh;
+
+                    &-active {
+                        max-height: 0;
+                        border-top-width: 0;
+                        transition: all v.$tran-dur-fast ease-in-out;
+                    }
+                }
+            }
+        }
+    }
+}

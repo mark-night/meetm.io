@@ -1,9 +1,36 @@
-@use '../../global/var' as v;
-@use '../../global/mixin' as m;
+@use '../../../scss/global/var' as v;
+@use '../../../scss/global/mixin' as m;
 
-@mixin nav {
-    &__nav {
-        --nav-size: 5rem;
+.carousel-nav {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    --nav-size: 5rem;
+
+    &__hidden {
+        // Necessary for preventing 'pointercancel' event from being fired when
+        // browser default actions like scroll or zoom is triggered, otherwise
+        // will have to setup event listeners for both mouseevent and touchevent
+        // https://developers.google.com/web/updates/2016/10/pointer-events
+        touch-action: none;
+        position: absolute;
+        background-color: transparent;
+        opacity: 0;
+        left: 0;
+        top: 0;
+        right: var(--nav-size);
+        bottom: 0;
+
+        @include m.portrait-prism {
+            right: 0;
+            bottom: var(--nav-size);
+        }
+    }
+
+    &__sidebar {
         --btn-size: calc(var(--nav-size) * 0.4);
 
         position: absolute;

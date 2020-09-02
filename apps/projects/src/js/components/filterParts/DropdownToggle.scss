@@ -1,6 +1,6 @@
-@use '../../global/var' as v;
+@use '../../../scss/global/var' as v;
 
-@mixin dropdown-toggle {
+.megaFilter__top__toggle {
     position: relative;
     height: 1.5rem;
     cursor: pointer;

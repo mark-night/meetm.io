@@ -10,9 +10,8 @@
     dur_slow: f.trim-unit(v.$tran-dur-slow);
     dur_normal: f.trim-unit(v.$tran-dur-normal);
     dur_fast: f.trim-unit(v.$tran-dur-fast);
-    class_fade: v.$tran-class-fade;
-    pose_up: v.$pose-up;
-    pose_front: v.$pose-front;
-    pose_down: v.$pose-down;
+    pose_prev: v.$pose-prev;
+    pose_current: v.$pose-current;
+    pose_next: v.$pose-next;
     ratio_switch: string.unquote(v.$ratio-switch);
 }

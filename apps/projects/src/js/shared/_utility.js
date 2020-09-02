@@ -63,3 +63,17 @@ export const normalizeIndex = (index, arr) => {
   }
   return indexNormalized;
 };
+
+export const loopSlice = (arr, start, num) => {
+  /**
+   * Slice @num of items from array @arr, starting from @start:
+   *  - If @arr end is reached before slice finishes, loop over from @arr beginning
+   *  - If @arr.length < num, repeat @arr to until it is long enough
+   */
+  const sliceSource = [];
+  const startIdx = normalizeIndex(start, arr);
+  do {
+    sliceSource.push(...arr);
+  } while (sliceSource.length < arr.length + num);
+  return sliceSource.slice(startIdx, startIdx + num);
+};

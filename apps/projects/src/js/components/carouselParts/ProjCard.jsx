@@ -1,46 +1,28 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FORWARD, BACKWARD } from '../../shared/_constant';
+import { useDispatch } from 'react-redux';
+import { updateCarouselAutorollDelay } from '../../store/actions/statusActions';
+import { SLIDE_DURATION } from '../../shared/_constant';
+import ImageSlide from './ImageSlide';
+import './ProjCard.scss';
 
-const ProjCard = ({ className, proj, onShow, rollCarousel, inLandscape }) => {
-  const downCoordinate = useRef([null, null]);
-  const handlePointerDown = useCallback(
-    e => {
-      if (!onShow) return;
-      e.preventDefault();
-      downCoordinate.current = [e.clientX, e.clientY];
-    },
-    [onShow]
-  );
-  const handlePointerUp = useCallback(
-    e => {
-      if (!onShow) return;
-      const tolerance = 10;
-      const dX = e.clientX - downCoordinate.current[0];
-      const dY = e.clientY - downCoordinate.current[1];
-      const swipedInX = Math.abs(dX) >= Math.abs(dY);
-      if (
-        (!inLandscape && swipedInX && dX < -tolerance) ||
-        (inLandscape && !swipedInX && dY < -tolerance)
-      ) {
-        rollCarousel(FORWARD);
-      } else if (
-        (!inLandscape && swipedInX && dX > tolerance) ||
-        (inLandscape && !swipedInX && dY > tolerance)
-      ) {
-        rollCarousel(BACKWARD);
-      }
-    },
-    [onShow, inLandscape, rollCarousel]
-  );
+const ProjCard = ({ className, proj, onShow }) => {
+  /**
+   * update store state for auto roll delay, which is consumed by carousel nav
+   */
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // update only on entering onShow
+    if (onShow) {
+      dispatch(
+        updateCarouselAutorollDelay(proj.images.length * SLIDE_DURATION)
+      );
+    }
+  }, [dispatch, onShow, proj.images]);
 
   return (
-    <div
-      className={className}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-    >
-      <img src={'http://localhost:8000' + proj.images[0]} alt={proj.title} />
+    <div className={className}>
+      <ImageSlide images={proj.images} altText={proj.title} onShow={onShow} />
     </div>
   );
 };
@@ -49,8 +31,6 @@ ProjCard.propTypes = {
   className: PropTypes.string,
   proj: PropTypes.object,
   onShow: PropTypes.bool,
-  rollCarousel: PropTypes.func,
-  inLandscape: PropTypes.bool,
 };
 
 export default ProjCard;

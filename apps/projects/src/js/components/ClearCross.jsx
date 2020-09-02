@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
-import { DUR_FAST, CLASS_FADE } from '../shared/_constant';
+import { DUR_FAST } from '../shared/_constant';
 
 const ClearCross = props => {
   return (
     <CSSTransition
       in={props.in}
-      classNames={`${CLASS_FADE}-${DUR_FAST}`}
+      classNames="fast-fade"
       timeout={DUR_FAST}
       mountOnEnter
       unmountOnExit
       onExited={props.onExited}
     >
       <div
-        className={`${props.parentClass}__clear`}
+        className={`${props.parentClass}__clear clear-cross`}
         onClick={props.clickCmd}
       ></div>
     </CSSTransition>

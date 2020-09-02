@@ -1,10 +1,10 @@
 import React, { useState, Fragment, useMemo, useEffect, useRef } from 'react';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import {
-  POSE_UP,
-  POSE_FRONT,
-  POSE_DOWN,
+  POSE_PREV,
+  POSE_CURRENT,
+  POSE_NEXT,
   RATIO_SWITCH,
   FORWARD,
   BACKWARD,
@@ -13,10 +13,11 @@ import {
 import { normalizeIndex } from '../../shared/_utility';
 import CarouselNav from './CarouselNav';
 import ProjCard from './ProjCard';
+import './ProjsCarousel.scss';
 
 const ProjsCarousel = props => {
-  const poses = [POSE_UP, POSE_FRONT, POSE_DOWN];
-  const showIdx = 1; // index for POSE_FRONT
+  const poses = [POSE_PREV, POSE_CURRENT, POSE_NEXT];
+  const showIdx = 1; // index for POSE_CURRENT
   // const projs = extendProjs(props.projs, poses);
   const projs = useMemo(() => extendProjs(props.projs, poses), [
     props.projs,
@@ -68,6 +69,7 @@ const ProjsCarousel = props => {
             /* stylelint-disable */
             transform: `translateZ(calc(-1 * var(--prism-depth))) rotate${
               makeLandscapePrism ? 'X' : 'Y'
+              // Style driven transition
             }(${steps * (makeLandscapePrism ? 120 : -120)}deg)`,
             /* stylelint-enable */
           }}
@@ -81,8 +83,9 @@ const ProjsCarousel = props => {
             const pose = poses[normalizeIndex(shiftedPosIdx, poses)];
             return (
               <CSSTransition
+                // To address subtle pop when ProjCard appear or disappear
                 key={proj.key}
-                classNames="transition__proj"
+                classNames="transition"
                 timeout={DUR_FAST}
               >
                 <ProjCard
@@ -92,7 +95,6 @@ const ProjsCarousel = props => {
                   proj={proj}
                   onShow={index === showIdx}
                   rollCarousel={roll}
-                  inLandscape={makeLandscapePrism}
                 />
               </CSSTransition>
             );
@@ -103,6 +105,7 @@ const ProjsCarousel = props => {
           rollCarousel={roll}
           counts={props.projs.length}
           current={normalizeIndex(steps, props.projs)}
+          inLandscape={makeLandscapePrism}
         />
       </div>
     </Fragment>

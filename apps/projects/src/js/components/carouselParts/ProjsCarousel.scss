@@ -1,9 +1,7 @@
-@use '../../global/var' as v;
-@use '../../global/mixin' as m;
+@use '../../../scss/global/var' as v;
+@use '../../../scss/global/mixin' as m;
 
-$prism-face-ready-opacity: 0.3;
-
-@mixin projs {
+.carousel__projs {
     --prism-height: calc(var(--prism-width) / var(--prism-ratio));
     --prism-push-out-bleed: 12vh;
     --prism-depth: calc(
@@ -38,6 +36,8 @@ $prism-face-ready-opacity: 0.3;
     }
 
     &__proj {
+        $standby-opacity: 0.3;
+
         position: absolute;
         width: 100%;
         height: 100%;
@@ -45,32 +45,52 @@ $prism-face-ready-opacity: 0.3;
         transition: opacity v.$tran-dur-slow;
 
         &.ready {
-            opacity: $prism-face-ready-opacity;
+            opacity: $standby-opacity;
         }
 
-        &.#{v.$pose-up} {
+        &.#{v.$pose-prev} {
             transform: rotateX(120deg) translateZ(calc(var(--prism-depth)));
         }
 
-        &.#{v.$pose-front} {
+        &.#{v.$pose-current} {
             transform: rotateX(0deg) translateZ(calc(var(--prism-depth)));
         }
 
-        &.#{v.$pose-down} {
+        &.#{v.$pose-next} {
             transform: rotateX(-120deg) translateZ(calc(var(--prism-depth)));
         }
 
         @include m.portrait-prism {
-            &.#{v.$pose-up} {
+            &.#{v.$pose-prev} {
                 transform: rotateY(-120deg) translateZ(var(--prism-depth));
             }
 
-            &.#{v.$pose-front} {
+            &.#{v.$pose-current} {
                 transform: rotateY(0deg) translateZ(var(--prism-depth));
             }
 
-            &.#{v.$pose-down} {
+            &.#{v.$pose-next} {
                 transform: rotateY(120deg) translateZ(var(--prism-depth));
+            }
+        }
+
+        &.transition {
+            &-enter {
+                opacity: 0;
+
+                &-active {
+                    opacity: $standby-opacity;
+                    transition: opacity v.$tran-dur-fast;
+                }
+            }
+
+            &-exit {
+                opacity: $standby-opacity;
+
+                &-active {
+                    opacity: 0;
+                    transition: opacity v.$tran-dur-fast;
+                }
             }
         }
     }

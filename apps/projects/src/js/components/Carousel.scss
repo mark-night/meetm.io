@@ -1,0 +1,68 @@
+@use '../../scss/global/var' as v;
+@use '../../scss/global/mixin' as m;
+
+.carousel {
+    position: relative;
+
+    &__message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        font-size: 2rem;
+        font-weight: lighter;
+        text-align: center;
+        color: v.$color-pale;
+
+        @include m.small-width {
+            font-size: 1.5rem;
+        }
+    }
+
+    & .transition {
+        &__message {
+            &-enter {
+                opacity: 0;
+
+                &-active {
+                    opacity: 1;
+                    transition: all v.$tran-dur-fast;
+                }
+            }
+
+            &-exit {
+                opacity: 1;
+
+                &-active {
+                    opacity: 0;
+                    transition: all v.$tran-dur-fast;
+                }
+            }
+        }
+
+        &__projs {
+            &-enter {
+                opacity: 0;
+                transform: scale(0);
+
+                &-active {
+                    opacity: 1;
+                    transform: scale(1);
+                    transition: all v.$tran-dur-fast linear;
+                }
+            }
+
+            &-exit {
+                opacity: 1;
+                transform: scale(1);
+
+                &-active {
+                    opacity: 0;
+                    transform: scale(0);
+                    transition: all v.$tran-dur-fast linear;
+                }
+            }
+        }
+    }
+}

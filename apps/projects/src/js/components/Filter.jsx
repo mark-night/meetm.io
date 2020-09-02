@@ -6,6 +6,7 @@ import SelectionStack from './filterParts/SelectionStack';
 import FilterDropdown from './filterParts/FilterDropdown';
 import DropdownToggle from './filterParts/DropdownToggle';
 import { DUR_NORMAL } from '../shared/_constant';
+import './Filter.scss';
 
 const Filter = () => {
   const [dropdownToggled, setDropdownToggled] = useState(false);
@@ -31,7 +32,7 @@ const Filter = () => {
       <div className={`${classBase}__bottom`}>
         <CSSTransition
           in={open}
-          classNames={`${classBase}__bottom__dropdown`}
+          classNames="transition"
           timeout={DUR_NORMAL}
           // Add CSSTransition outside the inner component instead of adding it
           // inside the inner component (outmost the JSX it returns) gives the
@@ -45,7 +46,7 @@ const Filter = () => {
             className={`${classBase}__bottom__dropdown`}
             topNode={ref}
           />
-        </CSSTransition>{' '}
+        </CSSTransition>
       </div>
     </div>
   );

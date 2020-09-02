@@ -1,7 +1,7 @@
-@use '../../global/var' as v;
-@use '../../global/mixin' as m;
+@use '../../../scss/global/var' as v;
+@use '../../../scss/global/mixin' as m;
 
-@mixin dropdown {
+.megaFilter__bottom__dropdown {
     padding: 1rem 2rem;
     background-color: #fff;
     max-height: 50vh;

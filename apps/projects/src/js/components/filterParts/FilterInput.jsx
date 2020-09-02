@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateFilterTerms } from '../../store/actions/filterActions';
 import { toggleFilterDropdown } from '../../store/actions/statusActions';
 import ClearCross from '../ClearCross';
+import './FilterInput.scss';
 
 const FilterInput = props => {
   const TIME_TO_WAIT_FOR_INPUT = 300;

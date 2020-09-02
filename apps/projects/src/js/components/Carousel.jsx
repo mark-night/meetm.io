@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { DUR_FAST } from '../shared/_constant';
 import ProjsCarousel from './carouselParts/ProjsCarousel';
+import './Carousel.scss';
 
 const Carousel = () => {
   const filtered = useSelector(state => state.chosen.filtered);

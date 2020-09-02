@@ -12,6 +12,12 @@ body {
     font-family: v.$font-sans-serif;
 }
 
+// Great trick to prevent page scrollbar from pushing everything left:
+// The key is the truth that '100vw' includes scrollbar while '100%' doesn't.
+body {
+    padding-left: calc(100vw - 100%);
+}
+
 ul {
     list-style: none;
     margin-block-start: unset;

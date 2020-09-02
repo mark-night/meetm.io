@@ -22,11 +22,10 @@ $screen-tiny: 480px;
 // SYNC WITH JS
 // for transitions
 $tran-dur-slow: 1000ms;
-$tran-dur-normal: 400ms;
-$tran-dur-fast: 200ms;
-$tran-class-fade: tran-fade;
+$tran-dur-normal: 600ms;
+$tran-dur-fast: 300ms;
 // for carousel prism
-$pose-up: pose-up;
-$pose-front: pose-front;
-$pose-down: pose-down;
+$pose-prev: pose-prev;
+$pose-current: pose-current;
+$pose-next: pose-next;
 $ratio-switch: '85/100';

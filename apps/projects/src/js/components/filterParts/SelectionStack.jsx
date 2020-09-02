@@ -5,6 +5,7 @@ import { updateFilterSelections } from '../../store/actions/filterActions.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { DUR_FAST, DUR_NORMAL } from '../../shared/_constant';
 import ClearCross from '../ClearCross';
+import './SelectionStack.scss';
 
 const SelectionStack = props => {
   const selections = useSelector(state => state.filter.selections || []);
@@ -15,7 +16,7 @@ const SelectionStack = props => {
   return (
     <CSSTransition
       in={selections.length > 0}
-      classNames={props.className}
+      classNames="transition"
       timeout={DUR_NORMAL}
       mountOnEnter
       unmountOnExit

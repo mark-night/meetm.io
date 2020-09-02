@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { updateFilterSelections } from '../../store/actions/filterActions.js';
-import { toggleFilterDropdown } from '../../store/actions/statusActions.js';
+import { updateFilterSelections } from '../../store/actions/filterActions';
+import { toggleFilterDropdown } from '../../store/actions/statusActions';
+import './FilterDropdown.scss';
 
 const FilterDropdown = props => {
   const className = props.className;
@@ -19,7 +20,7 @@ const FilterDropdown = props => {
     document.addEventListener('click', closeDropdown);
 
     return () => document.removeEventListener('click', closeDropdown);
-  });
+  }, [dispatch, open, props.topNode]);
 
   return (
     <div

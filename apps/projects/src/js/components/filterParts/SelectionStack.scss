@@ -1,0 +1,75 @@
+@use '../../../scss/global/var' as v;
+@use '../../../scss/global/mixin' as m;
+@use '../ClearCross.scss' as clear-cross;
+
+.megaFilter__center__selections {
+    display: grid;
+    grid-template-columns: 1fr 1.5rem;
+    gap: 1rem;
+    align-items: center;
+    background-color: #fff;
+    padding: 0.75rem 1.75rem;
+    border-radius: 10px 10px 10px 10px;
+    transition: border-radius v.$tran-dur-normal;
+
+    &.dropdown-opened {
+        border-radius: 10px 10px 0 0;
+    }
+
+    &__options {
+        display: flex;
+        flex-flow: row wrap;
+        height: 2.5rem;
+        overflow-y: auto;
+
+        &__option {
+            background-color: v.$color-pale;
+            border-radius: 3px;
+            margin: 0.25rem;
+            padding: 0.25rem;
+            height: 1.35rem;
+            display: grid;
+            grid-template-columns: 1fr 0.7rem;
+            column-gap: 0.5rem;
+            align-items: center;
+            overflow-x: hidden;
+            white-space: nowrap;
+
+            & .label {
+                font-family: v.$font-monospace;
+                font-size: 0.85rem;
+                line-height: 1;
+            }
+
+            & .close {
+                @include clear-cross.cross($size: 0.7rem);
+            }
+
+            &-enter {
+                max-width: 0;
+                opacity: 0;
+
+                &-active {
+                    max-width: 10rem;
+                    opacity: 1;
+                    transition: all v.$tran-dur-fast;
+                }
+            }
+
+            &-exit {
+                max-width: 10rem;
+                opacity: 1;
+
+                &-active {
+                    max-width: 0;
+                    opacity: 0;
+                    transition: all v.$tran-dur-fast;
+                }
+            }
+        }
+    }
+
+    &__clear {
+        @include clear-cross.cross($size: 1.5rem);
+    }
+}
