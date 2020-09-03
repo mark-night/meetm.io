@@ -44,7 +44,7 @@ const ProjsCarousel = props => {
     return () => window.removeEventListener('resize', syncCarouselPrismRatio);
   }, []);
 
-  const makeLandscapePrism = ratio >= RATIO_SWITCH;
+  const inLandscape = ratio >= RATIO_SWITCH;
 
   return (
     <Fragment>
@@ -53,7 +53,7 @@ const ProjsCarousel = props => {
         ref={prismScene}
         style={{
           /* stylelint-disable */
-          '--prism-ratio': makeLandscapePrism
+          '--prism-ratio': inLandscape
             ? Math.min(Math.max(3 / 2, ratio), 2.35 / 1)
             : Math.max(375 / 812, ratio),
           '--prism-width': `${
@@ -68,9 +68,9 @@ const ProjsCarousel = props => {
           style={{
             /* stylelint-disable */
             transform: `translateZ(calc(-1 * var(--prism-depth))) rotate${
-              makeLandscapePrism ? 'X' : 'Y'
+              inLandscape ? 'X' : 'Y'
               // Style driven transition
-            }(${steps * (makeLandscapePrism ? 120 : -120)}deg)`,
+            }(${steps * (inLandscape ? 120 : -120)}deg)`,
             /* stylelint-enable */
           }}
         >
@@ -105,7 +105,7 @@ const ProjsCarousel = props => {
           rollCarousel={roll}
           counts={props.projs.length}
           current={normalizeIndex(steps, props.projs)}
-          inLandscape={makeLandscapePrism}
+          inLandscape={inLandscape}
         />
       </div>
     </Fragment>

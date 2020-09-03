@@ -36,9 +36,9 @@ export const POSE_NEXT = constants.pose_next;
 // how long in ms each slide should be displayed
 export const SLIDE_DURATION = 3000;
 // default time to wait in ms before auto roll prism
-export const AUTOROLL_DELAY_DEFAULT = 8000;
+export const AUTOROLL_DELAY_DEFAULT = 5000;
 // how long in ms to wait before entering auto play
-export const AUTOPLAY_DELAY = 10000;
+export const AUTOPLAY_DELAY = 15000;
 
 /**
  * CAROUSEL/SLIDESHOW PLAY DIRECTION

@@ -6,46 +6,92 @@ import './CarouselNav.scss';
 
 const CarouselNav = ({ rollCarousel, counts, current, inLandscape }) => {
   const classBase = 'carousel-nav';
+  const rollDelay = useSelector(state => state.status.carousel_autoroll_delay);
+  const rollDelayed = useRef(0); // how long of the scheduled delay has passed
+  const rollDelayProgressDOM = useRef(null);
+  const autoDelayProgressDOM = useRef(null);
+  const [auto, setAuto] = useState(true);
   const rollToUse = useCallback(
     direction => {
       rollCarousel(direction);
-      setTouched(prev => prev + 1);
+      setAuto(false);
     },
     [rollCarousel]
   );
 
-  const [auto, setAuto] = useState(true);
   /**
-   * Roll prism if autoplay was enabled and delay was satisfied
+   * At every roll (auto or manual), reset roll delay progress
    */
-  const rollDelay = useSelector(state => state.status.carousel_autoroll_delay);
   useEffect(() => {
-    let timer = null;
-    if (auto) {
-      timer = setTimeout(() => {
-        rollCarousel(FORWARD);
-      }, rollDelay);
-    }
-    return () => timer && clearTimeout(timer);
-  }, [rollDelay, rollCarousel, auto]);
+    rollDelayed.current = 0;
+    rollDelayProgressDOM.current.style.setProperty('--progress', '0');
+  }, [current]);
 
   /**
-   * Setup timer and cancel previous timer for turning on autoplay on every
-   * user interaction
+   * On every roll or auto change, if auto is on, schedule next auto roll and
+   * setup delay progress refresh.
    */
-  const [touched, setTouched] = useState(0);
   useEffect(() => {
-    let timer = null;
-    if (touched > 0) {
-      setAuto(false);
-      timer = setTimeout(() => {
-        setTouched(0);
-      }, AUTOPLAY_DELAY);
-    } else {
-      setAuto(true);
+    let rollDelayTimer = null;
+    let rollDelayProgressTimer = null;
+    let rollDelayProgressIncrease = 0;
+    const start = Date.now();
+    if (auto) {
+      // setup roll delay progress render
+      rollDelayProgressTimer = setInterval(() => {
+        rollDelayProgressIncrease = Date.now() - start;
+        const progress = Math.min(
+          1,
+          (Date.now() - start + rollDelayed.current) / rollDelay
+        );
+        rollDelayProgressDOM.current.style.setProperty(
+          '--progress',
+          progress.toString()
+        );
+      }, 1000 / 30);
+      // schedule next auto roll
+      rollDelayTimer = setTimeout(() => {
+        rollCarousel(FORWARD);
+      }, rollDelay - rollDelayed.current);
     }
-    return () => timer && clearTimeout(timer);
-  }, [touched]);
+    return () => {
+      if (rollDelayTimer) clearTimeout(rollDelayTimer);
+      if (rollDelayProgressTimer) {
+        // roll delay progressed
+        clearInterval(rollDelayProgressTimer);
+        rollDelayed.current += rollDelayProgressIncrease;
+      }
+    };
+  }, [current, rollDelay, rollCarousel, auto]);
+
+  /**
+   * At each auto change:
+   *  - If auto enabled, reset delay progress.
+   *  - If auto disabled, schedule next turn on and setup delay progress refresh.
+   */
+  useEffect(() => {
+    let autoDelayTimer = null;
+    let progressTimer = null;
+    if (auto) {
+      autoDelayProgressDOM.current.style.setProperty('--ring-progress', '0');
+    } else {
+      // auto delay progress refresh
+      const start = Date.now();
+      progressTimer = setInterval(() => {
+        const progress = Math.min(1, (Date.now() - start) / AUTOPLAY_DELAY);
+        autoDelayProgressDOM.current.style.setProperty(
+          '--ring-progress',
+          progress.toString()
+        );
+      }, 1000 / 30);
+      // auto delay schedule
+      autoDelayTimer = setTimeout(() => setAuto(true), AUTOPLAY_DELAY);
+    }
+    return () => {
+      if (progressTimer) clearInterval(progressTimer);
+      if (autoDelayTimer) clearTimeout(autoDelayTimer);
+    };
+  }, [auto, current, rollCarousel]);
 
   /**
    * pointer (mouse & touch) handlers
@@ -76,9 +122,9 @@ const CarouselNav = ({ rollCarousel, counts, current, inLandscape }) => {
     [inLandscape, rollToUse]
   );
 
-  const dots = [];
+  const dotsJSX = [];
   for (let i = 0; i < counts; i++) {
-    dots.push(
+    dotsJSX.push(
       <li
         key={i}
         className={`${classBase}__sidebar__dot ${
@@ -89,18 +135,35 @@ const CarouselNav = ({ rollCarousel, counts, current, inLandscape }) => {
   }
   return (
     <div className={classBase}>
-      <div
+      <div //mainly for touch interaction
         className={`${classBase}__hidden`}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
       />
       <ul className={`${classBase}__sidebar`}>
+        <div // progress for next auto roll
+          className={`${classBase}__sidebar__progress`}
+          ref={rollDelayProgressDOM}
+        />
         <li className={`${classBase}__sidebar__btn`}>
           <div className="btn prev" onClick={() => rollToUse(BACKWARD)} />
         </li>
-        {dots}
+        {dotsJSX}
         <li className={`${classBase}__sidebar__btn`}>
           <div className="btn next" onClick={() => rollToUse(FORWARD)} />
+        </li>
+        <li className={`${classBase}__sidebar__switch`}>
+          <div // switch for enable/disable auto roll
+            className={`switch ${auto ? 'auto' : 'manual'}`}
+            onClick={() => setAuto(prev => !prev)}
+          >
+            <svg className="progress-ring">
+              <circle // progress for turning auto roll back on
+                className="progress-ring__circle"
+                ref={autoDelayProgressDOM}
+              />
+            </svg>
+          </div>
         </li>
       </ul>
     </div>
