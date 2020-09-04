@@ -5,6 +5,14 @@ export const MEDIA_ROOT = 'http://localhost:8000';
 export const FETCH_SOURCE = 'http://localhost:8000/api/proj/';
 
 /**
+ * IMAGE USABLE WIDTHS
+ */
+export const IMG_WIDTHS = {
+  landscape: [600, 700, 800, 900, 1024, 1200, 1400, 1600, 1800, 2048],
+  portrait: [300, 400, 500, 600, 700, 800],
+};
+
+/**
  * ACTION TYPES
  */
 export const FETCH_PROJS = 'FETCH_PROJS';
@@ -29,7 +37,9 @@ export const DUR_FAST = parseInt(constants.dur_fast);
  * CAROUSEL PRISM
  */
 const [a, b] = constants.ratio_switch.split('/');
-export const RATIO_SWITCH = parseInt(a) / parseInt(b);
+export const RATIO_NUMERATOR = parseInt(a);
+export const RATIO_DENOMINATOR = parseInt(b);
+export const RATIO_SWITCH = RATIO_NUMERATOR / RATIO_DENOMINATOR;
 export const POSE_CURRENT = constants.pose_current;
 export const POSE_PREV = constants.pose_prev;
 export const POSE_NEXT = constants.pose_next;

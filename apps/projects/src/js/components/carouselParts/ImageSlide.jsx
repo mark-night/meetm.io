@@ -1,7 +1,14 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { DUR_SLOW, MEDIA_ROOT, SLIDE_DURATION } from '../../shared/_constant';
+import {
+  DUR_SLOW,
+  MEDIA_ROOT,
+  SLIDE_DURATION,
+  RATIO_NUMERATOR,
+  RATIO_DENOMINATOR,
+  IMG_WIDTHS,
+} from '../../shared/_constant';
 import { normalizeIndex, loopSlice } from '../../shared/_utility';
 import './ImageSlide.scss';
 
@@ -38,15 +45,24 @@ const ImageSlide = ({ images, altText, onShow }) => {
             classNames="transition"
             timeout={DUR_SLOW}
           >
-            <img
-              src={MEDIA_ROOT + image}
-              alt={`Screenshot ${
-                normalizeIndex(current + index, images) + 1
-              } of ${altText}`}
-              className={`${classBase}__image ${
-                index === 0 ? 'onshow' : 'standby'
-              }`}
-            />
+            <picture>
+              <source
+                media={`(max-aspect-ratio: ${RATIO_NUMERATOR}/${RATIO_DENOMINATOR})`}
+                srcSet={imgSrcset(image, 'portrait')}
+              />
+              <source srcSet={imgSrcset(image, 'landscape')} />
+              <img
+                sizes={`(max-aspect-ratio: ${RATIO_NUMERATOR}/${RATIO_DENOMINATOR}) calc(min(1024px, 100vw) - 2rem - 20vw), calc(min(1024px, 100vw) - 2rem - 10vw)`}
+                // sizes="200px"
+                src={MEDIA_ROOT + image}
+                alt={`Screenshot ${
+                  normalizeIndex(current + index, images) + 1
+                } of ${altText}`}
+                className={`${classBase}__image ${
+                  index === 0 ? 'onshow' : 'standby'
+                }`}
+              />
+            </picture>
           </CSSTransition>
         ))}
       </TransitionGroup>
@@ -61,3 +77,18 @@ ImageSlide.propTypes = {
 };
 
 export default ImageSlide;
+
+const imgSrcset = (img, mode) => {
+  const originalImg = MEDIA_ROOT + img;
+  const { file, ext } = originalImg.match(
+    /(?<file>.*)\.(?<ext>jpg|jpeg|png)$/i
+  ).groups;
+  return IMG_WIDTHS[mode]
+    .map(
+      width =>
+        `${file}${
+          mode === 'portrait' ? '-portrait' : ''
+        }-${width.toString()}.${ext} ${width.toString()}w`
+    )
+    .join(',');
+};
