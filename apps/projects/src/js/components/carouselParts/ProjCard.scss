@@ -10,7 +10,7 @@
     height: 65%;
     transform: rotate(-5deg);
     // key to anti-alias jagged edges (when angled) on Chrome
-    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 
     @include m.small-width {
         left: 8%;
@@ -75,8 +75,8 @@
     }
 
     .info {
-        --corner-width: 2rem;
-        --sticker-color: #{color.scale(v.$color-base, $lightness: 30%)};
+        $corner-width: 2rem;
+        $sticker-color: color.scale(v.$color-base, $lightness: 30%);
         --scale: 1;
         font-size: calc(1rem * var(--scale));
         width: 100%;
@@ -86,11 +86,11 @@
         white-space: pre-wrap;
         color: v.$color-black;
         text-shadow: 0 1px v.$color-pale;
-        background: var(--sticker-color);
+        background: $sticker-color;
         background: linear-gradient(
             -150deg,
-            transparent calc(var(--corner-width) / 2 * 1.732),
-            var(--sticker-color) calc(var(--corner-width) / 2 * 1.732)
+            transparent ($corner-width / 2 * 1.732),
+            $sticker-color ($corner-width / 2 * 1.732)
         );
         display: flex;
         flex-direction: column;
@@ -105,13 +105,13 @@
             // curled corner
             content: '';
             position: absolute;
-            width: var(--corner-width);
-            height: calc(var(--corner-width) * 1.72);
+            width: $corner-width;
+            height: $corner-width * 1.732;
             top: 0;
-            right: calc(var(--corner-width) * 1.732 - var(--corner-width));
+            right: $corner-width * 1.732 - $corner-width;
             transform-origin: left top;
             transform: rotate(-30deg);
-            background: var(--sticker-color);
+            background: $sticker-color;
             background: linear-gradient(
                 -120deg,
                 transparent 50%,
@@ -188,20 +188,23 @@
             }
 
             // scrollbar
-            --scrollbar-width: 2px;
-            --scrollbar-color-bg: #{color.scale(v.$color-base, $lightness: 50%)};
-            --scrollbar-color-fg: #{v.$color-base};
-            scrollbar-width: var(--scrollbar-width);
-            scrollbar-color: var(--scrollbar-color-fg) var(--scrollbar-color-bg);
+            $scrollbar-width: 2px;
+            $scrollbar-color-fg: v.$color-base;
+            $scrollbar-color-bg: color.scale(
+                $scrollbar-color-fg,
+                $lightness: 50%
+            );
+            scrollbar-width: $scrollbar-width;
+            scrollbar-color: $scrollbar-color-fg $scrollbar-color-bg;
             &::-webkit-scrollbar {
-                width: var(--scrollbar-width);
+                width: $scrollbar-width;
             }
             &::-webkit-scrollbar-thumb {
-                background-color: var(--scrollbar-color-fg);
-                border-radius: calc(var(--scrollbar-width) / 3);
+                background-color: $scrollbar-color-fg;
+                border-radius: $scrollbar-width / 3;
             }
             &::-webkit-scrollbar-track {
-                background-color: var(--scrollbar-color-bg);
+                background-color: $scrollbar-color-bg;
             }
         }
     }

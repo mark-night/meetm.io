@@ -2,28 +2,25 @@
 @use '../../../scss/global/mixin' as m;
 
 .carousel__projs {
+    $prism-push-out-bleed: 10vmin;
     --prism-height: calc(var(--prism-width) / var(--prism-ratio));
-    --prism-push-out-bleed: 12vh;
     --prism-depth: calc(
-        var(--prism-height) / 2 / 1.732 + var(--prism-push-out-bleed) / 1.732 *
-            2
+        var(--prism-height) / 2 / 1.732 + #{$prism-push-out-bleed / 1.732 * 2}
     );
 
     @include m.portrait-prism {
-        --prism-push-out-bleed: 10vw;
         --prism-depth: calc(
-            var(--prism-width) / 2 / 1.732 + var(--prism-push-out-bleed) / 1.732 *
-                2
+            var(--prism-width) / 2 / 1.732 + #{$prism-push-out-bleed / 1.732 * 2}
         );
 
         perspective: calc(var(--prism-width) / 2 * 1.732 + 30rem);
-        margin: 5vh var(--prism-push-out-bleed);
+        margin: 5vh $prism-push-out-bleed;
     }
 
     padding-top: var(--prism-height);
     perspective: calc(var(--prism-height) / 2 * 1.732 + 30rem);
     position: relative;
-    margin: var(--prism-push-out-bleed) 5vw;
+    margin: $prism-push-out-bleed 5vw;
 
     &::before {
         // shadow

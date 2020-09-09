@@ -101,13 +101,13 @@ const ProjsCarousel = props => {
             );
           })}
         </TransitionGroup>
-        <CarouselNav
-          className={`${props.className}__nav`}
-          rollCarousel={roll}
-          counts={props.projs.length}
-          current={normalizeIndex(steps, props.projs)}
-        />
       </div>
+      <CarouselNav
+        className={`${props.className}__nav`}
+        rollCarousel={roll}
+        counts={props.projs.length}
+        current={normalizeIndex(steps, props.projs)}
+      />
     </Fragment>
   );
 };

@@ -50,7 +50,7 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
           '--progress',
           progress.toString()
         );
-      }, 1000 / 30);
+      }, 1000 / 10);
       // schedule next auto roll
       rollDelayTimer = setTimeout(() => {
         rollCarousel(FORWARD);
@@ -85,7 +85,7 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
           '--ring-progress',
           progress.toString()
         );
-      }, 1000 / 30);
+      }, 1000 / 10);
       // auto delay schedule
       autoDelayTimer = setTimeout(
         () => dispatch(toggleCarouselAuto(true)),
