@@ -1,4 +1,4 @@
-import { hot } from 'react-hot-loader/root';
+// import { hot } from 'react-hot-loader/root';
 import React, { useEffect, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { FETCH_PROJS, FETCH_SOURCE } from '../shared/_constant';
@@ -8,11 +8,6 @@ import Carousel from './Carousel';
 
 const App = () => {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    document.title = 'Projects | meetm.io';
-  }, []);
-
   useEffect(() => {
     const getProjs = async () => {
       const response = await fetch(FETCH_SOURCE);
@@ -32,4 +27,5 @@ const App = () => {
   );
 };
 
-export default hot(App);
+// export default hot(App);
+export default App;

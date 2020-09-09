@@ -4,7 +4,7 @@
 .megaFilter__bottom__dropdown {
     padding: 1rem 2rem;
     background-color: #fff;
-    max-height: 50vh;
+    max-height: calc(100vh - 12rem);
     overflow-x: hidden;
     overflow-y: auto;
     display: grid;

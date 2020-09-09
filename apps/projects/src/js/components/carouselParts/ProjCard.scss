@@ -1,2 +1,208 @@
 @use '../../../scss/global/var' as v;
 @use '../../../scss/global/mixin' as m;
+@use 'sass:color';
+
+.carousel__projs__proj .info.container {
+    position: absolute;
+    left: 8%;
+    top: 15%;
+    width: 45%;
+    height: 65%;
+    transform: rotate(-5deg);
+    // key to anti-alias jagged edges (when angled) on Chrome
+    -webkit-backface-visibility: hidden;
+
+    @include m.small-width {
+        left: 8%;
+        top: 10%;
+        width: 55%;
+        height: 75%;
+    }
+
+    @include m.portrait-prism {
+        left: 10%;
+        top: 50%;
+        width: 60%;
+        height: 40%;
+
+        @include m.small-width {
+            left: 8%;
+            top: 45%;
+            width: 70%;
+            height: 40%;
+        }
+
+        @include m.tiny-width {
+            width: 80%;
+            height: 40%;
+            top: 40%;
+            left: 8%;
+        }
+    }
+
+    &::before {
+        // shadow
+        content: '';
+        position: absolute;
+        z-index: -1;
+        bottom: 0;
+        left: 0.2rem;
+        width: 50%;
+        height: 80%;
+        transform-origin: left bottom;
+        transform: rotate(5deg);
+        box-shadow: -1.2rem -0.8rem 0.8rem rgba(0, 0, 0, 0.6);
+
+        @include m.medium-width {
+            left: 0.5rem;
+            box-shadow: -1.2rem -0.8rem 0.8rem rgba(0, 0, 0, 0.6);
+        }
+        @include m.small-width {
+            left: 0.45rem;
+            box-shadow: -1rem -0.8rem 0.8rem rgba(0, 0, 0, 0.6);
+        }
+        @include m.portrait-prism {
+            @include m.medium-width {
+                left: 0.2rem;
+            }
+            @include m.small-width {
+                left: 0.2rem;
+            }
+            @include m.tiny-width {
+                left: 0.55rem;
+            }
+        }
+    }
+
+    .info {
+        --corner-width: 2rem;
+        --sticker-color: #{color.scale(v.$color-base, $lightness: 30%)};
+        --scale: 1;
+        font-size: calc(1rem * var(--scale));
+        width: 100%;
+        height: 100%;
+        padding: calc(2rem * var(--scale));
+        padding-right: calc(1.5rem * var(--scale));
+        white-space: pre-wrap;
+        color: v.$color-black;
+        text-shadow: 0 1px v.$color-pale;
+        background: var(--sticker-color);
+        background: linear-gradient(
+            -150deg,
+            transparent calc(var(--corner-width) / 2 * 1.732),
+            var(--sticker-color) calc(var(--corner-width) / 2 * 1.732)
+        );
+        display: flex;
+        flex-direction: column;
+
+        @include m.portrait-prism {
+            @include m.tiny-width {
+                --scale: 0.8;
+            }
+        }
+
+        &::after {
+            // curled corner
+            content: '';
+            position: absolute;
+            width: var(--corner-width);
+            height: calc(var(--corner-width) * 1.72);
+            top: 0;
+            right: calc(var(--corner-width) * 1.732 - var(--corner-width));
+            transform-origin: left top;
+            transform: rotate(-30deg);
+            background: var(--sticker-color);
+            background: linear-gradient(
+                -120deg,
+                transparent 50%,
+                color.scale(v.$color-base, $lightness: -15%) 50%,
+                v.$color-base 60%,
+                color.scale(v.$color-base, $lightness: 30%) 100%
+            );
+            box-shadow: -0.3rem 0.1rem 0.3rem -0.2rem rgba(0, 0, 0, 0.7);
+        }
+
+        & .link {
+            display: inline-block;
+            text-decoration: none;
+            color: v.$color-dark;
+            font-weight: bold;
+
+            &__symbol {
+                margin-left: 0.5em;
+                fill: color.scale(v.$color-dark, $alpha: -50%);
+                width: 0.8em;
+                height: 0.8em;
+
+                &:hover {
+                    fill: v.$color-dark;
+                }
+            }
+
+            &:hover {
+                text-decoration: underline;
+
+                & svg {
+                    fill: v.$color-dark;
+                }
+            }
+        }
+
+        &__title {
+            flex: 0;
+            text-transform: uppercase;
+            font-size: calc(1.5rem * var(--scale));
+            line-height: 1;
+            margin-bottom: calc(0.8rem * var(--scale));
+        }
+
+        &__data {
+            flex: 1;
+            overflow-y: auto;
+            width: 100%;
+            padding-right: calc(0.5rem * var(--scale));
+
+            &__tech {
+                font-family: v.$font-monospace;
+                font-size: 0.8em;
+                line-height: 1.8;
+                margin-top: 0;
+
+                &__tag {
+                    background-color: color.scale(
+                        v.$color-base,
+                        $lightness: 10%
+                    );
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+                    line-height: 1;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-items: center;
+                    padding: 0.2em;
+                    border-radius: 3px;
+                }
+            }
+
+            &__texts {
+                word-wrap: break-word;
+            }
+
+            // scrollbar
+            --scrollbar-width: 2px;
+            --scrollbar-color-bg: #{color.scale(v.$color-base, $lightness: 50%)};
+            --scrollbar-color-fg: #{v.$color-base};
+            scrollbar-width: var(--scrollbar-width);
+            scrollbar-color: var(--scrollbar-color-fg) var(--scrollbar-color-bg);
+            &::-webkit-scrollbar {
+                width: var(--scrollbar-width);
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: var(--scrollbar-color-fg);
+                border-radius: calc(var(--scrollbar-width) / 3);
+            }
+            &::-webkit-scrollbar-track {
+                background-color: var(--scrollbar-color-bg);
+            }
+        }
+    }
+}

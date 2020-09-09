@@ -95,6 +95,7 @@ const ProjsCarousel = props => {
                   proj={proj}
                   onShow={index === showIdx}
                   rollCarousel={roll}
+                  inLandscape={inLandscape}
                 />
               </CSSTransition>
             );
@@ -105,7 +106,6 @@ const ProjsCarousel = props => {
           rollCarousel={roll}
           counts={props.projs.length}
           current={normalizeIndex(steps, props.projs)}
-          inLandscape={inLandscape}
         />
       </div>
     </Fragment>

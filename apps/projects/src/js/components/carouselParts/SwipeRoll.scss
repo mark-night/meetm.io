@@ -1,0 +1,12 @@
+.swipe-blocker {
+    // Necessary for preventing 'pointercancel' event from being fired when
+    // browser default actions like scroll or zoom is triggered, otherwise
+    // will have to setup event listeners for both mouseevent and touchevent
+    // https://developers.google.com/web/updates/2016/10/pointer-events
+    touch-action: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

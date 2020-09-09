@@ -71,12 +71,12 @@
                     transition: max-height v.$tran-dur-fast ease-in-out;
 
                     &-active {
-                        max-height: 50vh;
+                        max-height: calc(100vh - 12rem);
                     }
                 }
 
                 &-exit {
-                    max-height: 50vh;
+                    max-height: calc(100vh - 12rem);
 
                     &-active {
                         max-height: 0;

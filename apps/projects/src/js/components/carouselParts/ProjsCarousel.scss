@@ -17,13 +17,57 @@
         );
 
         perspective: calc(var(--prism-width) / 2 * 1.732 + 30rem);
-        margin: 3vh var(--prism-push-out-bleed);
+        margin: 5vh var(--prism-push-out-bleed);
     }
 
     padding-top: var(--prism-height);
     perspective: calc(var(--prism-height) / 2 * 1.732 + 30rem);
     position: relative;
     margin: var(--prism-push-out-bleed) 5vw;
+
+    &::before {
+        // shadow
+        content: '';
+        z-index: -1;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 80%;
+        height: 1rem;
+        border-radius: 50%;
+        background-color: v.$color-white;
+        pointer-events: none;
+        --shadow-shift: calc(var(--prism-height) * 0.75);
+        box-shadow: 0 var(--shadow-shift) 1rem rgba(0, 0, 0, 0.1),
+            5rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
+            -5rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
+            10rem var(--shadow-shift) 3rem rgba(0, 0, 0, 0.3),
+            -10rem var(--shadow-shift) 3rem rgba(0, 0, 0, 0.3);
+
+        @include m.portrait-prism {
+            --shadow-shift: calc(var(--prism-height) * 0.6);
+            box-shadow: 0 var(--shadow-shift) 1rem rgba(0, 0, 0, 0.1),
+                4rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
+                -4rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
+                8rem var(--shadow-shift) 3rem rgba(0, 0, 0, 0.3),
+                -8rem var(--shadow-shift) 3rem rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    &::after {
+        // page height holder
+        content: '';
+        position: absolute;
+        bottom: calc(-0.25 * var(--prism-height) - 5rem);
+        height: 1px;
+        width: 100%;
+        background-color: transparent;
+
+        @include m.portrait-prism {
+            bottom: calc(-0.1 * var(--prism-height) - 5rem);
+        }
+    }
 
     &__prism {
         position: absolute;

@@ -12,10 +12,13 @@ body {
     font-family: v.$font-sans-serif;
 }
 
-// Great trick to prevent page scrollbar from pushing everything left:
+// One great trick to prevent page scrollbar from pushing everything left is:
+// padding-left: calc(100vw - 100%);
 // The key is the truth that '100vw' includes scrollbar while '100%' doesn't.
+// Can't be used here though because it will cause width calculation for prism
+// (when in portrait mode) change on scrollbar's appear/disappear.
 body {
-    padding-left: calc(100vw - 100%);
+    overflow-y: scroll;
 }
 
 ul {

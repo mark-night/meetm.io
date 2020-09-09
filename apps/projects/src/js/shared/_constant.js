@@ -1,8 +1,10 @@
 /**
  * PATH ROOT FOR MEDIA LOADING
  */
-export const MEDIA_ROOT = 'http://localhost:8000';
-export const FETCH_SOURCE = 'http://localhost:8000/api/proj/';
+// const host = 'http://localhost:8000';
+const host = '';
+export const MEDIA_ROOT = host;
+export const FETCH_SOURCE = host + '/api/proj/';
 
 /**
  * IMAGE USABLE WIDTHS
@@ -49,6 +51,7 @@ export const SLIDE_DURATION = 3000;
 export const AUTOROLL_DELAY_DEFAULT = 5000;
 // how long in ms to wait before entering auto play
 export const AUTOPLAY_DELAY = 15000;
+export const TOGGLE_CAROUSEL_AUTO = 'TOGGLE_CAROUSEL_AUTO';
 
 /**
  * CAROUSEL/SLIDESHOW PLAY DIRECTION

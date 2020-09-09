@@ -1,22 +1,24 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FORWARD, BACKWARD, AUTOPLAY_DELAY } from '../../shared/_constant';
+import { toggleCarouselAuto } from '../../store/actions/statusActions';
 import './CarouselNav.scss';
 
-const CarouselNav = ({ rollCarousel, counts, current, inLandscape }) => {
+const CarouselNav = ({ rollCarousel, counts, current }) => {
   const classBase = 'carousel-nav';
+  const auto = useSelector(state => state.status.carousel_auto);
+  const dispatch = useDispatch();
   const rollDelay = useSelector(state => state.status.carousel_autoroll_delay);
   const rollDelayed = useRef(0); // how long of the scheduled delay has passed
   const rollDelayProgressDOM = useRef(null);
   const autoDelayProgressDOM = useRef(null);
-  const [auto, setAuto] = useState(true);
   const rollToUse = useCallback(
     direction => {
       rollCarousel(direction);
-      setAuto(false);
+      dispatch(toggleCarouselAuto(false));
     },
-    [rollCarousel]
+    [rollCarousel, dispatch]
   );
 
   /**
@@ -85,88 +87,55 @@ const CarouselNav = ({ rollCarousel, counts, current, inLandscape }) => {
         );
       }, 1000 / 30);
       // auto delay schedule
-      autoDelayTimer = setTimeout(() => setAuto(true), AUTOPLAY_DELAY);
+      autoDelayTimer = setTimeout(
+        () => dispatch(toggleCarouselAuto(true)),
+        AUTOPLAY_DELAY
+      );
     }
     return () => {
       if (progressTimer) clearInterval(progressTimer);
       if (autoDelayTimer) clearTimeout(autoDelayTimer);
     };
-  }, [auto, current, rollCarousel]);
-
-  /**
-   * pointer (mouse & touch) handlers
-   */
-  const downCoordinate = useRef([null, null]);
-  const handlePointerDown = e => {
-    e.preventDefault();
-    downCoordinate.current = [e.clientX, e.clientY];
-  };
-  const handlePointerUp = useCallback(
-    e => {
-      const tolerance = 10;
-      const dX = e.clientX - downCoordinate.current[0];
-      const dY = e.clientY - downCoordinate.current[1];
-      const swipedInX = Math.abs(dX) >= Math.abs(dY);
-      if (
-        (!inLandscape && swipedInX && dX < -tolerance) ||
-        (inLandscape && !swipedInX && dY < -tolerance)
-      ) {
-        rollToUse(FORWARD);
-      } else if (
-        (!inLandscape && swipedInX && dX > tolerance) ||
-        (inLandscape && !swipedInX && dY > tolerance)
-      ) {
-        rollToUse(BACKWARD);
-      }
-    },
-    [inLandscape, rollToUse]
-  );
+  }, [auto, current, rollCarousel, dispatch]);
 
   const dotsJSX = [];
   for (let i = 0; i < counts; i++) {
     dotsJSX.push(
       <li
         key={i}
-        className={`${classBase}__sidebar__dot ${
-          i === current ? `${classBase}__sidebar__dot--current` : ''
+        className={`${classBase}__dot ${
+          i === current ? `${classBase}__dot--current` : ''
         }`}
       />
     );
   }
   return (
-    <div className={classBase}>
-      <div //mainly for touch interaction
-        className={`${classBase}__hidden`}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
+    <ul className={`${classBase}`}>
+      <div // progress for next auto roll
+        className={`${classBase}__progress`}
+        ref={rollDelayProgressDOM}
       />
-      <ul className={`${classBase}__sidebar`}>
-        <div // progress for next auto roll
-          className={`${classBase}__sidebar__progress`}
-          ref={rollDelayProgressDOM}
-        />
-        <li className={`${classBase}__sidebar__btn`}>
-          <div className="btn prev" onClick={() => rollToUse(BACKWARD)} />
-        </li>
-        {dotsJSX}
-        <li className={`${classBase}__sidebar__btn`}>
-          <div className="btn next" onClick={() => rollToUse(FORWARD)} />
-        </li>
-        <li className={`${classBase}__sidebar__switch`}>
-          <div // switch for enable/disable auto roll
-            className={`switch ${auto ? 'auto' : 'manual'}`}
-            onClick={() => setAuto(prev => !prev)}
-          >
-            <svg className="progress-ring">
-              <circle // progress for turning auto roll back on
-                className="progress-ring__circle"
-                ref={autoDelayProgressDOM}
-              />
-            </svg>
-          </div>
-        </li>
-      </ul>
-    </div>
+      <li className={`${classBase}__btn`}>
+        <div className="btn prev" onClick={() => rollToUse(BACKWARD)} />
+      </li>
+      {dotsJSX}
+      <li className={`${classBase}__btn`}>
+        <div className="btn next" onClick={() => rollToUse(FORWARD)} />
+      </li>
+      <li className={`${classBase}__switch`}>
+        <div // switch for enable/disable auto roll
+          className={`switch ${auto ? 'auto' : 'manual'}`}
+          onClick={() => dispatch(toggleCarouselAuto(!auto))}
+        >
+          <svg className="progress-ring">
+            <circle // progress for turning auto roll back on
+              className="progress-ring__circle"
+              ref={autoDelayProgressDOM}
+            />
+          </svg>
+        </div>
+      </li>
+    </ul>
   );
 };
 
@@ -174,7 +143,6 @@ CarouselNav.propTypes = {
   rollCarousel: PropTypes.func,
   counts: PropTypes.number,
   current: PropTypes.number,
-  inLandscape: PropTypes.bool,
 };
 
 export default CarouselNav;

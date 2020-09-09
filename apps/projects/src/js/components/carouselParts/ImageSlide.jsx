@@ -49,11 +49,13 @@ const ImageSlide = ({ images, altText, onShow }) => {
               <source
                 media={`(max-aspect-ratio: ${RATIO_NUMERATOR}/${RATIO_DENOMINATOR})`}
                 srcSet={imgSrcset(image, 'portrait')}
+                sizes="calc(min(1024px, 100vw) - 2rem - 20vw)"
               />
-              <source srcSet={imgSrcset(image, 'landscape')} />
+              <source
+                srcSet={imgSrcset(image, 'landscape')}
+                sizes="calc(min(1024px, 100vw) - 2rem - 10vw)"
+              />
               <img
-                sizes={`(max-aspect-ratio: ${RATIO_NUMERATOR}/${RATIO_DENOMINATOR}) calc(min(1024px, 100vw) - 2rem - 20vw), calc(min(1024px, 100vw) - 2rem - 10vw)`}
-                // sizes="200px"
                 src={MEDIA_ROOT + image}
                 alt={`Screenshot ${
                   normalizeIndex(current + index, images) + 1
@@ -83,12 +85,12 @@ const imgSrcset = (img, mode) => {
   const { file, ext } = originalImg.match(
     /(?<file>.*)\.(?<ext>jpg|jpeg|png)$/i
   ).groups;
-  return IMG_WIDTHS[mode]
-    .map(
-      width =>
-        `${file}${
-          mode === 'portrait' ? '-portrait' : ''
-        }-${width.toString()}.${ext} ${width.toString()}w`
-    )
-    .join(',');
+  const srcset = IMG_WIDTHS[mode].map(
+    width =>
+      `${file}${
+        mode === 'portrait' ? '-portrait' : ''
+      }-${width.toString()}.${ext} ${width.toString()}w`
+  );
+  srcset.push(`${file}${mode === 'portrait' ? '-portrait' : ''}.${ext}`);
+  return srcset.join(',');
 };
