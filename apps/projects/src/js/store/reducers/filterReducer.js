@@ -3,7 +3,7 @@ import {
   UPDATE_FILTER_SELECTIONS,
 } from '../../shared/_constant';
 
-export default (state = {}, action) => {
+export default (state = { terms: [], selections: [] }, action) => {
   const { type, payload } = action;
   switch (type) {
     case UPDATE_FILTER_TERMS:

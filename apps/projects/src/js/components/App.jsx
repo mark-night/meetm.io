@@ -1,4 +1,4 @@
-// import { hot } from 'react-hot-loader/root';
+import { hot } from 'react-hot-loader/root';
 import React, { useEffect, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { FETCH_PROJS, FETCH_SOURCE } from '../shared/_constant';
@@ -27,5 +27,5 @@ const App = () => {
   );
 };
 
-// export default hot(App);
-export default App;
+export default hot(App);
+// export default App;

@@ -2,9 +2,9 @@ import { FILTER_PROJS, PICK_PROJ } from '../../shared/_constant';
 
 export const filterProjs = () => (dispatch, getState) => {
   const state = getState();
-  let projs = state.meta.projects || [];
-  const terms = state.filter.terms || [];
-  const selections = state.filter.selections || [];
+  let projs = state.meta.projects;
+  const terms = state.filter.terms;
+  const selections = state.filter.selections;
 
   if (projs.length === 0) {
     // Either failed fetching projects meta data, or filterProjs() was called too

@@ -29,13 +29,14 @@
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%)
+            translateZ(calc(-2 * var(--prism-depth)));
         width: 80%;
         height: 1rem;
         border-radius: 50%;
         background-color: v.$color-white;
         pointer-events: none;
-        --shadow-shift: calc(var(--prism-height) * 0.75);
+        --shadow-shift: calc(var(--prism-height) * 1.1);
         box-shadow: 0 var(--shadow-shift) 1rem rgba(0, 0, 0, 0.1),
             5rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
             -5rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
@@ -43,7 +44,7 @@
             -10rem var(--shadow-shift) 3rem rgba(0, 0, 0, 0.3);
 
         @include m.portrait-prism {
-            --shadow-shift: calc(var(--prism-height) * 0.6);
+            --shadow-shift: calc(var(--prism-height) * 0.85);
             box-shadow: 0 var(--shadow-shift) 1rem rgba(0, 0, 0, 0.1),
                 4rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
                 -4rem var(--shadow-shift) 2rem rgba(0, 0, 0, 0.2),
@@ -78,15 +79,20 @@
 
     &__proj {
         $standby-opacity: 0.3;
+        $standby-brightness: 0.85;
+        $standby-saturation: 0;
 
         position: absolute;
         width: 100%;
         height: 100%;
         opacity: 1;
-        transition: opacity v.$tran-dur-slow;
+        filter: brightness(1) saturate(1);
+        transition: opacity v.$tran-dur-slow, filter v.$tran-dur-slow;
 
         &.ready {
             opacity: $standby-opacity;
+            filter: brightness($standby-brightness)
+                saturate($standby-saturation);
         }
 
         &.#{v.$pose-prev} {
@@ -118,19 +124,27 @@
         &.transition {
             &-enter {
                 opacity: 0;
+                filter: brightness(0) saturate(0);
 
                 &-active {
                     opacity: $standby-opacity;
-                    transition: opacity v.$tran-dur-fast;
+                    filter: brightness($standby-brightness)
+                        saturate($standby-saturation);
+                    transition: opacity v.$tran-dur-fast,
+                        filter v.$tran-dur-fast;
                 }
             }
 
             &-exit {
                 opacity: $standby-opacity;
+                filter: brightness($standby-brightness)
+                    saturate($standby-saturation);
 
                 &-active {
                     opacity: 0;
-                    transition: opacity v.$tran-dur-fast;
+                    filter: brightness(0) saturate(0);
+                    transition: opacity v.$tran-dur-fast,
+                        filter v.$tran-dur-fast;
                 }
             }
         }

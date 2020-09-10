@@ -19,7 +19,7 @@ export const updateFilterSelections = (selections, add = true) => (
   const excludedTags = ['Category']; // ManyToOne fields
 
   selections = typeof selections === 'string' ? [selections] : selections;
-  let prevSelections = state.filter.selections || [];
+  let prevSelections = state.filter.selections;
   let newSelections;
 
   if (add) {
@@ -40,7 +40,7 @@ export const updateFilterSelections = (selections, add = true) => (
 };
 
 const parseForExclusion = (selections, prevSelections, excludedTags, state) => {
-  const tags = state.meta.tags || {};
+  const tags = state.meta.tags;
   for (const exclusion of excludedTags) {
     const tagsToCheck = tags[exclusion] || [];
     tagsToCheck.forEach(tag => {

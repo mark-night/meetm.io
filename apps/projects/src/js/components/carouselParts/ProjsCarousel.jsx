@@ -10,7 +10,7 @@ import {
   BACKWARD,
   DUR_FAST,
 } from '../../shared/_constant';
-import { normalizeIndex } from '../../shared/_utility';
+import { normalizeIndex, debounce } from '../../shared/_utility';
 import CarouselNav from './CarouselNav';
 import ProjCard from './ProjCard';
 import './ProjsCarousel.scss';
@@ -38,10 +38,16 @@ const ProjsCarousel = props => {
   const prismScene = useRef(null);
   const [ratio, setRatio] = useState(window.innerWidth / window.innerHeight);
   useEffect(() => {
-    const syncCarouselPrismRatio = () =>
-      setRatio(window.innerWidth / window.innerHeight);
-    window.addEventListener('resize', syncCarouselPrismRatio);
-    return () => window.removeEventListener('resize', syncCarouselPrismRatio);
+    // Debouncing not only good for performance, but also fixes a weird issue
+    // with iOS Safari, which skips last sync on orientation change.
+    // Delayed sync also fixes immediate roll on first load when viewed on mobile.
+    const debouncedSyncCarouselPrismRatio = debounce(
+      () => setRatio(window.innerWidth / window.innerHeight),
+      300
+    );
+    window.addEventListener('resize', debouncedSyncCarouselPrismRatio);
+    return () =>
+      window.removeEventListener('resize', debouncedSyncCarouselPrismRatio);
   }, []);
 
   const inLandscape = ratio >= RATIO_SWITCH;

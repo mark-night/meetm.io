@@ -1,6 +1,6 @@
 import { PICK_PROJ, FILTER_PROJS } from '../../shared/_constant';
 
-export default (state = {}, action) => {
+export default (state = { filtered: [], picked: {} }, action) => {
   const { type, payload } = action;
   switch (type) {
     case FILTER_PROJS:

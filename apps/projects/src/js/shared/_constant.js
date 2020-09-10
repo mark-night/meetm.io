@@ -1,8 +1,8 @@
 /**
  * PATH ROOT FOR MEDIA LOADING
  */
-// const host = 'http://localhost:8000';
-const host = '';
+const host = 'https://meetm.io';
+// const host = '';
 export const MEDIA_ROOT = host;
 export const FETCH_SOURCE = host + '/api/proj/';
 
@@ -46,11 +46,11 @@ export const POSE_CURRENT = constants.pose_current;
 export const POSE_PREV = constants.pose_prev;
 export const POSE_NEXT = constants.pose_next;
 // how long in ms each slide should be displayed
-export const SLIDE_DURATION = 3000;
+export const SLIDE_DURATION = 200000;
 // default time to wait in ms before auto roll prism
-export const AUTOROLL_DELAY_DEFAULT = 5000;
+export const AUTOROLL_DELAY_DEFAULT = 300000;
 // how long in ms to wait before entering auto play
-export const AUTOPLAY_DELAY = 15000;
+export const AUTOPLAY_DELAY = 1000000;
 export const TOGGLE_CAROUSEL_AUTO = 'TOGGLE_CAROUSEL_AUTO';
 
 /**

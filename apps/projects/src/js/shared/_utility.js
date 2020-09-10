@@ -77,3 +77,19 @@ export const loopSlice = (arr, start, num) => {
   } while (sliceSource.length < arr.length + num);
   return sliceSource.slice(startIdx, startIdx + num);
 };
+
+export const debounce = (fn, ms) => {
+  /**
+   * debounce execution of @fn for @ms ms
+   */
+  let timer = null;
+  return function () {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(null, [...arguments]);
+      timer = null;
+    }, ms);
+  };
+};

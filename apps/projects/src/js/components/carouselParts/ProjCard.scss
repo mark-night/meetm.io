@@ -4,6 +4,7 @@
 
 .carousel__projs__proj .info.container {
     position: absolute;
+    z-index: 1;
     left: 8%;
     top: 15%;
     width: 45%;
@@ -83,7 +84,7 @@
         height: 100%;
         padding: calc(2rem * var(--scale));
         padding-right: calc(1.5rem * var(--scale));
-        white-space: pre-wrap;
+        white-space: break-spaces;
         color: v.$color-black;
         text-shadow: 0 1px v.$color-pale;
         background: $sticker-color;

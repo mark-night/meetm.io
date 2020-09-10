@@ -6,13 +6,14 @@ import ProjsCarousel from './carouselParts/ProjsCarousel';
 import './Carousel.scss';
 
 const Carousel = () => {
+  const projects = useSelector(state => state.meta.projects);
   const filtered = useSelector(state => state.chosen.filtered);
   const classBase = 'carousel';
 
   let key,
     classNames = 'transition',
     jsxOutput;
-  if (!filtered) {
+  if (projects.length === 0) {
     key = 'loading';
     classNames += '__message';
     jsxOutput = (

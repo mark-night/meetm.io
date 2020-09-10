@@ -8,7 +8,7 @@ import ClearCross from '../ClearCross';
 import './SelectionStack.scss';
 
 const SelectionStack = props => {
-  const selections = useSelector(state => state.filter.selections || []);
+  const selections = useSelector(state => state.filter.selections);
   const dropdownOpened = useSelector(state => state.status.filterDropdown_open);
   const dispatch = useDispatch();
   const [stack, setStack] = useState(false);

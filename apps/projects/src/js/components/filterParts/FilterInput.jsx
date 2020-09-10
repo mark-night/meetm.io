@@ -9,7 +9,7 @@ import './FilterInput.scss';
 const FilterInput = props => {
   const TIME_TO_WAIT_FOR_INPUT = 300;
   const [term, setTerm] = useState('');
-  const selections = useSelector(state => state.filter.selections || []);
+  const selections = useSelector(state => state.filter.selections);
   const open = useSelector(state => state.status.filterDropdown_open);
   const dispatch = useDispatch();
 

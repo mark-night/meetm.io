@@ -7,9 +7,9 @@ import './FilterDropdown.scss';
 
 const FilterDropdown = props => {
   const className = props.className;
-  const tags = useSelector(state => state.meta.tags || {});
+  const tags = useSelector(state => state.meta.tags);
   const open = useSelector(state => state.status.filterDropdown_open && true);
-  const selections = useSelector(state => state.filter.selections || []);
+  const selections = useSelector(state => state.filter.selections);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ FilterDropdown.propTypes = {
 export default FilterDropdown;
 
 const FilterOptionGroup = props => {
-  const selections = useSelector(state => state.filter.selections || []);
+  const selections = useSelector(state => state.filter.selections);
   const dispatch = useDispatch();
   return (
     <ul>
