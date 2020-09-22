@@ -8,21 +8,24 @@
     position: absolute;
     background-color: v.$color-black;
     opacity: 0.8;
-    top: 0;
-    right: calc(5vw + 1rem);
+    // matching prism-bleed-h
+    top: calc(5 * var(--vh));
+    bottom: calc(5 * var(--vh));
+    // matching prism-bleed-w + scene's padding
+    right: calc(2rem + 1rem);
     width: #{$nav-size};
-    height: 100%;
     padding: #{$btn-size} #{($nav-size - $btn-size) / 2};
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
 
     @include m.portrait-prism {
-        // left: calc(10vw + 1rem);
-        right: calc(10vw + 1rem);
         top: unset;
         bottom: 0;
-        width: calc(100% - 2 * (10vw + 1rem));
+        // matching prism-bleed-w + scene's padding
+        right: calc(5 * var(--vw) + 1rem);
+        left: calc(5 * var(--vw) + 1rem);
+        width: unset;
         height: #{$nav-size};
         padding: #{($nav-size - $btn-size) / 2} #{$btn-size};
         flex-direction: row;

@@ -2,38 +2,23 @@
 @use '../../../scss/global/mixin' as m;
 
 .megaFilter__bottom__dropdown {
-    padding: 1rem 2rem;
-    background-color: #fff;
-    max-height: calc(100vh - 12rem);
+    touch-action: pan-y;
     overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    // deduct the parent padding
+    max-height: calc(var(--height) - 2rem);
     display: grid;
     column-gap: 1rem;
     justify-content: space-between;
-    grid-template-columns: repeat(5, 7rem);
-
-    @include m.medium-width {
-        grid-template-columns: repeat(4, 7rem);
-    }
+    grid-template-columns: repeat(4, minmax(12ch, 1fr));
 
     @include m.small-width {
-        grid-template-columns: repeat(3, 7rem);
+        grid-template-columns: repeat(2, minmax(12ch, 1fr));
     }
 
     @include m.tiny-width {
         grid-template-columns: 1fr;
-    }
-
-    &__optionGroup {
-        padding-bottom: 1rem;
-
-        @include m.tiny-width {
-            padding-bottom: 0.5rem;
-
-            &:last-child {
-                padding-bottom: 1rem;
-            }
-        }
     }
 
     &__label {

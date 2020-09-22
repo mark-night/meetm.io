@@ -25,7 +25,7 @@ SECRET_KEY = 'o&-vq*tkm5c(@-@aa2*7ly)i@yo-aioqzuq(sw21gumwl%2_09'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.68.105']
 
 
 # Application definition
@@ -70,6 +70,7 @@ CORS_ORIGIN_REGEX_WHITELIST = [
     r"^https?://localhost(:\d+)?$",
     r"^https?://127.0.0.1(:\d+)?$",
     r"^https?://192.168.68.105(:\d+)?$",
+    r"^https?://markcave.local(:\d+)?$",
 ]
 
 ROOT_URLCONF = 'meetm.urls'

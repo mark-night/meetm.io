@@ -93,6 +93,7 @@ if (task === 'dev') {
     watchContentBase: true,
     port: 3000,
     host: '0.0.0.0',
+    disableHostCheck: true,
     hot: true,
     overlay: true,
   };

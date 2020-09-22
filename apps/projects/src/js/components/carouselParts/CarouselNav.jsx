@@ -10,7 +10,6 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
   const auto = useSelector(state => state.status.carousel_auto);
   const dispatch = useDispatch();
   const rollDelay = useSelector(state => state.status.carousel_autoroll_delay);
-  const rollDelayed = useRef(0); // how long of the scheduled delay has passed
   const rollDelayProgressDOM = useRef(null);
   const autoDelayProgressDOM = useRef(null);
   const rollToUse = useCallback(
@@ -22,81 +21,62 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
   );
 
   /**
-   * At every roll (auto or manual), reset roll delay progress
+   * Restart rollDelay on every roll (auto or manual).
    */
   useEffect(() => {
-    rollDelayed.current = 0;
+    rollDelayAccum.current = 0;
     rollDelayProgressDOM.current.style.setProperty('--progress', '0');
   }, [current]);
 
   /**
-   * On every roll or auto change, if auto is on, schedule next auto roll and
-   * setup delay progress refresh.
+   * On every roll or auto change, deactivate requested animation frame, then
+   * activate new animation frame request if auto is enabled.
    */
+  const rollDelayAFReq = useRef(null);
+  const rollDelayAccum = useRef(0);
   useEffect(() => {
-    let rollDelayTimer = null;
-    let rollDelayProgressTimer = null;
-    let rollDelayProgressIncrease = 0;
-    const start = Date.now();
+    deactivateProgressUpdate({ AFReq: rollDelayAFReq });
     if (auto) {
-      // setup roll delay progress render
-      rollDelayProgressTimer = setInterval(() => {
-        rollDelayProgressIncrease = Date.now() - start;
-        const progress = Math.min(
-          1,
-          (Date.now() - start + rollDelayed.current) / rollDelay
-        );
-        rollDelayProgressDOM.current.style.setProperty(
-          '--progress',
-          progress.toString()
-        );
-      }, 1000 / 10);
-      // schedule next auto roll
-      rollDelayTimer = setTimeout(() => {
-        rollCarousel(FORWARD);
-      }, rollDelay - rollDelayed.current);
+      activateProgressUpdate({
+        el: rollDelayProgressDOM,
+        prop: '--progress',
+        accum: rollDelayAccum,
+        end: rollDelay,
+        AFReq: rollDelayAFReq,
+        callback: () => rollCarousel(FORWARD),
+      });
     }
-    return () => {
-      if (rollDelayTimer) clearTimeout(rollDelayTimer);
-      if (rollDelayProgressTimer) {
-        // roll delay progressed
-        clearInterval(rollDelayProgressTimer);
-        rollDelayed.current += rollDelayProgressIncrease;
-      }
-    };
-  }, [current, rollDelay, rollCarousel, auto]);
+    // current and rollDelay may change at the same time, i.e. when
+    // rolling into a project that has different rollDelay
+    // todo: if effect will run twice in this case?
+  }, [auto, current, rollDelay, rollCarousel]);
 
   /**
-   * At each auto change:
-   *  - If auto enabled, reset delay progress.
-   *  - If auto disabled, schedule next turn on and setup delay progress refresh.
+   * On every auto change or roll (manual or auto), deactivate existing animation
+   * frame request and reset progress, then activate new animation frame request
+   * if auto is not enabled.
    */
+  const autoDelayAFReq = useRef(null);
+  const autoDelayAccum = useRef(0);
   useEffect(() => {
-    let autoDelayTimer = null;
-    let progressTimer = null;
-    if (auto) {
-      autoDelayProgressDOM.current.style.setProperty('--ring-progress', '0');
-    } else {
-      // auto delay progress refresh
-      const start = Date.now();
-      progressTimer = setInterval(() => {
-        const progress = Math.min(1, (Date.now() - start) / AUTOPLAY_DELAY);
-        autoDelayProgressDOM.current.style.setProperty(
-          '--ring-progress',
-          progress.toString()
-        );
-      }, 1000 / 10);
-      // auto delay schedule
-      autoDelayTimer = setTimeout(
-        () => dispatch(toggleCarouselAuto(true)),
-        AUTOPLAY_DELAY
-      );
+    deactivateProgressUpdate({
+      AFReq: autoDelayAFReq,
+      callback: () => {
+        autoDelayAccum.current = 0;
+        autoDelayProgressDOM.current.style.setProperty('--ring-progress', '0');
+      },
+    });
+    if (!auto) {
+      activateProgressUpdate({
+        el: autoDelayProgressDOM,
+        prop: '--ring-progress',
+        end: AUTOPLAY_DELAY,
+        accum: autoDelayAccum,
+        AFReq: autoDelayAFReq,
+        callback: () => dispatch(toggleCarouselAuto(true)),
+      });
     }
-    return () => {
-      if (progressTimer) clearInterval(progressTimer);
-      if (autoDelayTimer) clearTimeout(autoDelayTimer);
-    };
-  }, [auto, current, rollCarousel, dispatch]);
+  }, [auto, current, dispatch]);
 
   const dotsJSX = [];
   for (let i = 0; i < counts; i++) {
@@ -146,3 +126,31 @@ CarouselNav.propTypes = {
 };
 
 export default CarouselNav;
+
+const activateProgressUpdate = ({ el, prop, accum, end, AFReq, callback }) => {
+  let lastTimestamp = null;
+  const step = timestamp => {
+    const delta = lastTimestamp ? timestamp - lastTimestamp : 0;
+    lastTimestamp = timestamp;
+    accum.current += delta;
+    let progress = Math.min(1, accum.current / end);
+    el.current.style.setProperty(prop, progress.toString());
+    if (progress < 1) {
+      AFReq.current = window.requestAnimationFrame(step);
+    } else {
+      if (callback) {
+        callback();
+      }
+    }
+  };
+  AFReq.current = window.requestAnimationFrame(step);
+};
+
+const deactivateProgressUpdate = ({ AFReq, callback }) => {
+  if (AFReq.current) {
+    window.cancelAnimationFrame(AFReq.current);
+  }
+  if (callback) {
+    callback();
+  }
+};

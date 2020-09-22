@@ -7,35 +7,41 @@
     &__top {
         background-color: #fff;
         padding: 1rem 2rem;
+        margin-bottom: 1rem;
         border-radius: 10px;
         display: grid;
         align-items: center;
         grid-template-columns: auto 1.5rem;
         gap: 1rem;
+
+        @include m.tiny-width {
+            padding: 1rem;
+        }
     }
 
     &__center {
-        margin-top: 1rem;
-
         & .transition-wrapper {
             overflow: hidden;
+            margin-top: 1rem;
+            --max-height: calc(30 * var(--vh));
 
             &.transition {
                 &-enter {
                     max-height: 0;
-                    transition: max-height v.$tran-dur-normal ease-in-out;
+                    transition: max-height v.$tran-dur-fast;
 
-                    &-active {
-                        max-height: 5rem;
+                    &-active,
+                    &-done {
+                        max-height: var(--max-height);
                     }
                 }
 
                 &-exit {
-                    max-height: 5rem;
+                    max-height: var(--max-height);
 
                     &-active {
                         max-height: 0;
-                        transition: max-height v.$tran-dur-normal ease-in-out;
+                        transition: max-height v.$tran-dur-fast;
                     }
                 }
             }
@@ -44,6 +50,7 @@
 
     &__bottom {
         position: relative;
+        --height: 60vmin;
 
         & .transition-wrapper {
             @include m.big-soft-shadow;
@@ -53,12 +60,18 @@
             right: 0;
             top: 0;
             z-index: 1;
-            overflow: hidden;
+            padding: 1rem 2rem;
+            @include m.tiny-width {
+                padding: 1rem;
+            }
+            background-color: #fff;
             border-top-style: solid;
             border-top-color: v.$color-pale;
             border-top-width: 0;
             border-radius: 10px 10px 10px 10px;
-            transition: all v.$tran-dur-fast;
+            overflow: hidden;
+            transition: border v.$tran-dur-fast, padding v.$tran-dur-fast,
+                max-height v.$tran-dur-fast;
 
             &.with-selections {
                 border-top-width: 1px;
@@ -68,20 +81,38 @@
             &.transition {
                 &-enter {
                     max-height: 0;
-                    transition: max-height v.$tran-dur-fast ease-in-out;
+                    padding: 0 2rem;
+                    @include m.tiny-width {
+                        padding: 0 1rem;
+                    }
+                    transition: all v.$tran-dur-fast;
 
-                    &-active {
-                        max-height: calc(100vh - 12rem);
+                    &-active,
+                    &-done {
+                        padding: 1rem 2rem;
+                        @include m.tiny-width {
+                            padding: 1rem;
+                        }
+                        max-height: var(--height);
                     }
                 }
 
                 &-exit {
-                    max-height: calc(100vh - 12rem);
+                    padding: 1rem 2rem;
+                    @include m.tiny-width {
+                        padding: 1rem;
+                    }
+                    max-height: var(--height);
 
                     &-active {
                         max-height: 0;
+                        padding: 0 2rem;
+                        @include m.tiny-width {
+                            padding: 0 1rem;
+                        }
                         border-top-width: 0;
-                        transition: all v.$tran-dur-fast ease-in-out;
+                        transition: border v.$tran-dur-fast,
+                            all v.$tran-dur-fast;
                     }
                 }
             }

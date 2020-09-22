@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Swipeable } from 'react-swipeable';
 import { useDispatch } from 'react-redux';
 import { toggleCarouselAuto } from '../../store/actions/statusActions';
-import { FORWARD, BACKWARD } from '../../shared/_constant';
+import { FORWARD, BACKWARD, RATIO_SWITCH } from '../../shared/_constant';
 import './SwipeRoll.scss';
 
-const SwipeRoll = ({ inLandscape, rollCarousel }) => {
+const SwipeRoll = ({ rollCarousel }) => {
   const dispatch = useDispatch();
 
   const rollBackward = () => {
@@ -19,13 +19,25 @@ const SwipeRoll = ({ inLandscape, rollCarousel }) => {
     dispatch(toggleCarouselAuto(false));
   };
 
+  const inLandscape = useRef(
+    window.innerWidth / window.innerHeight >= RATIO_SWITCH
+  );
+  useEffect(() => {
+    const syncRatio = () => {
+      inLandscape.current =
+        window.innerWidth / window.innerHeight >= RATIO_SWITCH;
+    };
+    window.addEventListener('resize', syncRatio);
+    return () => window.removeEventListener('resize', syncRatio);
+  }, []);
+
   return (
     <Swipeable
       className="swipe-blocker"
-      onSwipedLeft={() => !inLandscape && rollForward()}
-      onSwipedRight={() => !inLandscape && rollBackward()}
-      onSwipedUp={() => inLandscape && rollForward()}
-      onSwipedDown={() => inLandscape && rollBackward()}
+      onSwipedLeft={() => !inLandscape.current && rollForward()}
+      onSwipedRight={() => !inLandscape.current && rollBackward()}
+      onSwipedUp={() => inLandscape.current && rollForward()}
+      onSwipedDown={() => inLandscape.current && rollBackward()}
       delta={10}
       preventDefaultTouchmoveEvent={true}
       trackTouch={true}
@@ -36,7 +48,6 @@ const SwipeRoll = ({ inLandscape, rollCarousel }) => {
 };
 
 SwipeRoll.propTypes = {
-  inLandscape: PropTypes.bool,
   rollCarousel: PropTypes.func,
 };
 

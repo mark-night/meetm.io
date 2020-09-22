@@ -30,7 +30,7 @@ const FilterDropdown = props => {
     >
       <ul className={`${className}`}>
         {Object.keys(tags).map(tagGroup => {
-          return (
+          return tagGroup === 'Category' ? null : (
             <li key={tagGroup} className={`${className}__optionGroup`}>
               <FilterOptionGroup
                 className={className}

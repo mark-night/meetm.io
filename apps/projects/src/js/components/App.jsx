@@ -2,6 +2,7 @@ import { hot } from 'react-hot-loader/root';
 import React, { useEffect, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { FETCH_PROJS, FETCH_SOURCE } from '../shared/_constant';
+import { resizeObserver } from '../shared/_observers';
 import { filterProjs } from '../store/actions/projActions';
 import Filter from './Filter';
 import Carousel from './Carousel';
@@ -18,6 +19,16 @@ const App = () => {
     };
     getProjs();
   }, [dispatch]);
+
+  /**
+   * fix helper for vh/vw calculation
+   * https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+   */
+  useEffect(() => {
+    const html = document.documentElement;
+    resizeObserver.observe(html);
+    return () => resizeObserver.unobserve(html);
+  }, []);
 
   return (
     <Fragment>

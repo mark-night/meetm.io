@@ -2,7 +2,7 @@
 @use '../../../scss/global/mixin' as m;
 @use 'sass:color';
 
-.carousel__projs__proj .info.container {
+.carousel__projs__proj .info-wrapper {
     position: absolute;
     z-index: 1;
     left: 8%;
@@ -34,10 +34,10 @@
         }
 
         @include m.tiny-width {
-            width: 80%;
-            height: 40%;
-            top: 40%;
-            left: 8%;
+            width: 90%;
+            height: 50%;
+            top: 35%;
+            left: 5%;
         }
     }
 
@@ -159,7 +159,7 @@
 
         &__data {
             flex: 1;
-            overflow-y: auto;
+            overflow-y: scroll;
             width: 100%;
             padding-right: calc(0.5rem * var(--scale));
 
@@ -199,6 +199,7 @@
             scrollbar-color: $scrollbar-color-fg $scrollbar-color-bg;
             &::-webkit-scrollbar {
                 width: $scrollbar-width;
+                -webkit-appearance: none;
             }
             &::-webkit-scrollbar-thumb {
                 background-color: $scrollbar-color-fg;
@@ -210,3 +211,8 @@
         }
     }
 }
+
+// .carousel__projs__proj.show .info-wrapper .info__data {
+//     overflow-y: auto;
+//     touch-action: pan-y;
+// }

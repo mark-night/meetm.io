@@ -12,10 +12,10 @@ const Filter = () => {
   const [dropdownToggled, setDropdownToggled] = useState(false);
   const open = useSelector(state => state.status.filterDropdown_open && true);
   const classBase = 'megaFilter';
-  const ref = useRef(null);
+  const megaFilter = useRef(null);
 
   return (
-    <div className={`${classBase} wrapper wrapper--medium`} ref={ref}>
+    <div className={`${classBase} wrapper wrapper--medium`} ref={megaFilter}>
       <div className={`${classBase}__top`}>
         <FilterInput
           className={`${classBase}__top__input`}
@@ -44,7 +44,7 @@ const Filter = () => {
         >
           <FilterDropdown
             className={`${classBase}__bottom__dropdown`}
-            topNode={ref}
+            topNode={megaFilter}
           />
         </CSSTransition>
       </div>

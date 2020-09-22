@@ -1,4 +1,4 @@
-import { FILTER_PROJS, PICK_PROJ } from '../../shared/_constant';
+import { FILTER_PROJS } from '../../shared/_constant';
 
 export const filterProjs = () => (dispatch, getState) => {
   const state = getState();
@@ -40,8 +40,4 @@ export const filterProjs = () => (dispatch, getState) => {
   });
 
   dispatch({ type: FILTER_PROJS, payload: projs });
-};
-
-export const pickProj = proj => {
-  return { type: PICK_PROJ, payload: proj };
 };

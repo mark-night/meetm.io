@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { updateFilterSelections } from '../../store/actions/filterActions.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { DUR_FAST, DUR_NORMAL } from '../../shared/_constant';
+import { DUR_FAST } from '../../shared/_constant';
+import { resizeObserver } from '../../shared/_observers';
 import ClearCross from '../ClearCross';
 import './SelectionStack.scss';
 
@@ -11,17 +12,21 @@ const SelectionStack = props => {
   const selections = useSelector(state => state.filter.selections);
   const dropdownOpened = useSelector(state => state.status.filterDropdown_open);
   const dispatch = useDispatch();
-  const [stack, setStack] = useState(false);
+
+  // start observing stack size change
+  useEffect(() => {
+    const stackEl = document.querySelector('.megaFilter__center');
+    resizeObserver.observe(stackEl);
+    return () => resizeObserver.unobserve(stackEl);
+  }, []);
 
   return (
     <CSSTransition
       in={selections.length > 0}
       classNames="transition"
-      timeout={DUR_NORMAL}
+      timeout={DUR_FAST}
       mountOnEnter
       unmountOnExit
-      onEntered={() => setStack(true)}
-      onExit={() => setStack(false)}
     >
       {/* a wrapper is necessary to make transition easier */}
       <div className="transition-wrapper">
@@ -32,16 +37,12 @@ const SelectionStack = props => {
         >
           <SelectionsFlow
             className={props.className + '__options'}
-            renderFlow={stack}
             selections={selections}
           />
           <ClearCross
-            in={stack}
+            in={selections.length > 0}
             parentClass={props.className}
-            clickCmd={() => {
-              setStack(false);
-            }}
-            onExited={() => dispatch(updateFilterSelections(selections, false))}
+            clickCmd={() => dispatch(updateFilterSelections(selections, false))}
           />
         </div>
       </div>
@@ -55,38 +56,39 @@ SelectionStack.propTypes = {
 
 export default SelectionStack;
 
-const SelectionsFlow = props => {
+const SelectionsFlow = ({ selections, className }) => {
   const dispatch = useDispatch();
-  const { renderFlow, selections } = props;
+
   return (
-    <TransitionGroup className={props.className} component="ul">
-      {renderFlow
-        ? selections.map(option => {
-            return (
-              <CSSTransition
-                key={option}
-                classNames={`${props.className}__option`}
-                timeout={DUR_FAST}
-              >
-                <li className={`${props.className}__option`}>
-                  <span className="label">{option}</span>
-                  <span
-                    className="close"
-                    onClick={() => {
-                      dispatch(updateFilterSelections(option, false));
-                    }}
-                  ></span>
-                </li>
-              </CSSTransition>
-            );
-          })
-        : null}
+    <TransitionGroup className={className} component="ul">
+      {selections.map(option => {
+        return (
+          <CSSTransition
+            key={option}
+            classNames={`${className}__option`}
+            timeout={DUR_FAST}
+            onEntered={el => {
+              const flowDOM = el.parentElement;
+              flowDOM.scrollTop = flowDOM.scrollHeight - flowDOM.offsetHeight;
+            }}
+          >
+            <li className={`${className}__option`}>
+              <span className="label">{option}</span>
+              <span
+                className="close"
+                onClick={() => {
+                  dispatch(updateFilterSelections(option, false));
+                }}
+              ></span>
+            </li>
+          </CSSTransition>
+        );
+      })}
     </TransitionGroup>
   );
 };
 
 SelectionsFlow.propTypes = {
-  renderFlow: PropTypes.bool,
   selections: PropTypes.arrayOf(PropTypes.string),
   className: PropTypes.string,
 };

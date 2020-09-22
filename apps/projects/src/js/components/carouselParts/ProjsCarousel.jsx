@@ -1,26 +1,25 @@
-import React, { useState, Fragment, useMemo, useEffect, useRef } from 'react';
+import React, { useState, Fragment, useMemo, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import {
   POSE_PREV,
   POSE_CURRENT,
   POSE_NEXT,
-  RATIO_SWITCH,
   FORWARD,
   BACKWARD,
   DUR_FAST,
 } from '../../shared/_constant';
-import { normalizeIndex, debounce } from '../../shared/_utility';
+import { normalizeIndex } from '../../shared/_utility';
+import { resizeObserver } from '../../shared/_observers';
 import CarouselNav from './CarouselNav';
 import ProjCard from './ProjCard';
 import './ProjsCarousel.scss';
 
-const ProjsCarousel = props => {
+const ProjsCarousel = ({ className, projs }) => {
   const poses = [POSE_PREV, POSE_CURRENT, POSE_NEXT];
   const showIdx = 1; // index for POSE_CURRENT
-  // const projs = extendProjs(props.projs, poses);
-  const projs = useMemo(() => extendProjs(props.projs, poses), [
-    props.projs,
+  const projsExtended = useMemo(() => extendProjs(projs, poses), [
+    projs,
     poses,
   ]);
 
@@ -35,56 +34,30 @@ const ProjsCarousel = props => {
     }
   };
 
-  const prismScene = useRef(null);
-  const [ratio, setRatio] = useState(window.innerWidth / window.innerHeight);
+  /**
+   * keep observing scene DOM to get and pass its width to prism
+   */
+  const scene = useRef(null);
   useEffect(() => {
-    // Debouncing not only good for performance, but also fixes a weird issue
-    // with iOS Safari, which skips last sync on orientation change.
-    // Delayed sync also fixes immediate roll on first load when viewed on mobile.
-    const debouncedSyncCarouselPrismRatio = debounce(
-      () => setRatio(window.innerWidth / window.innerHeight),
-      300
-    );
-    window.addEventListener('resize', debouncedSyncCarouselPrismRatio);
-    return () =>
-      window.removeEventListener('resize', debouncedSyncCarouselPrismRatio);
+    const sceneDOM = scene.current;
+    resizeObserver.observe(sceneDOM);
+    return () => resizeObserver.unobserve(sceneDOM);
   }, []);
-
-  const inLandscape = ratio >= RATIO_SWITCH;
 
   return (
     <Fragment>
-      <div
-        className={props.className}
-        ref={prismScene}
-        style={{
-          /* stylelint-disable */
-          '--prism-ratio': inLandscape
-            ? Math.min(Math.max(3 / 2, ratio), 2.35 / 1)
-            : Math.max(375 / 812, ratio),
-          '--prism-width': `${
-            prismScene.current && prismScene.current.clientWidth
-          }px`,
-          /* stylelint-enable */
-        }}
-      >
+      <div className={className} ref={scene}>
         <TransitionGroup
           component="div"
-          className={`${props.className}__prism`}
-          style={{
-            /* stylelint-disable */
-            transform: `translateZ(calc(-1 * var(--prism-depth))) rotate${
-              inLandscape ? 'X' : 'Y'
-              // Style driven transition
-            }(${steps * (inLandscape ? 120 : -120)}deg)`,
-            /* stylelint-enable */
-          }}
+          className={`${className}__prism`}
+          style={{ '--rotation': 120 * steps }}
         >
           {poses.map((pos, index) => {
             // Each pair of proj.key and pose assign proj to a designated face
             // of the prism, which is then rolled by steps.
             const shiftedProjIdx = index - showIdx + steps;
-            const proj = projs[normalizeIndex(shiftedProjIdx, projs)];
+            const proj =
+              projsExtended[normalizeIndex(shiftedProjIdx, projsExtended)];
             const shiftedPosIdx = index + steps;
             const pose = poses[normalizeIndex(shiftedPosIdx, poses)];
             return (
@@ -95,13 +68,12 @@ const ProjsCarousel = props => {
                 timeout={DUR_FAST}
               >
                 <ProjCard
-                  className={`${props.className}__proj ${pose} ${
+                  className={`${className}__proj ${pose} ${
                     index === showIdx ? 'show' : 'ready'
                   }`}
                   proj={proj}
                   onShow={index === showIdx}
                   rollCarousel={roll}
-                  inLandscape={inLandscape}
                 />
               </CSSTransition>
             );
@@ -109,10 +81,10 @@ const ProjsCarousel = props => {
         </TransitionGroup>
       </div>
       <CarouselNav
-        className={`${props.className}__nav`}
+        className={`${className}__nav`}
         rollCarousel={roll}
-        counts={props.projs.length}
-        current={normalizeIndex(steps, props.projs)}
+        counts={projs.length}
+        current={normalizeIndex(steps, projs)}
       />
     </Fragment>
   );
