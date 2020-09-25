@@ -1,10 +1,11 @@
-import React, { useEffect, Fragment, useRef } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { updateCarouselAutorollDelay } from '../../store/actions/statusActions';
 import { SLIDE_DURATION } from '../../shared/_constant';
 import ImageSlide from './ImageSlide';
 import SwipeRoll from './SwipeRoll';
+import SwipeableScroll from './SwipeableScroll';
 import './ProjCard.scss';
 
 const ProjCard = ({ className, proj, onShow, rollCarousel }) => {
@@ -20,28 +21,6 @@ const ProjCard = ({ className, proj, onShow, rollCarousel }) => {
       );
     }
   }, [dispatch, onShow, proj.images]);
-
-  /**
-   * Give clue to user indicating data can be scrolled
-   */
-  const dataDOM = useRef(null);
-  // useEffect(() => {
-  //   let timer;
-  //   if (onShow) {
-  //     const dom = dataDOM.current;
-  //     if (dom.scrollHeight > dom.clientHeight) {
-  //       timer = setInterval(() => {
-  //         if (dom.scrollHeight - dom.scrollTop === dom.clientHeight) {
-  //           dom.scrollTop = 0;
-  //         }
-  //         dom.scrollBy(0, 1);
-  //       }, 100);
-  //     }
-  //   } else {
-  //     timer && clearInterval(timer);
-  //   }
-  //   return () => timer && clearInterval(timer);
-  // }, [onShow]);
 
   const linkSymbol = (
     <svg className="link__symbol" viewBox="0 0 100 100">
@@ -65,7 +44,10 @@ const ProjCard = ({ className, proj, onShow, rollCarousel }) => {
             {proj.title}
             {linkSymbol}
           </a>
-          <div className="info__data" ref={dataDOM}>
+          <SwipeableScroll
+            wrapperClass="info__data-wrapper"
+            scrollClass="info__data"
+          >
             <p className="info__data__tech">
               {['languages', 'frameworks', 'tools', 'concepts'].map(tech => {
                 return proj[tech].map(tag => {
@@ -89,7 +71,7 @@ const ProjCard = ({ className, proj, onShow, rollCarousel }) => {
               </a>
             )}
             <p className="info__data__texts">{proj.desc_long}</p>
-          </div>
+          </SwipeableScroll>
         </div>
       </div>
     </div>

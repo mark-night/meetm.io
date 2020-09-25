@@ -2,8 +2,8 @@
  * PATH ROOT FOR MEDIA LOADING
  */
 // const host = 'https://meetm.io';
-const host = 'http://192.168.68.105:8000';
-// const host = '';
+// const host = 'http://192.168.68.105:8000';
+const host = '';
 export const MEDIA_ROOT = host;
 export const FETCH_SOURCE = host + '/api/proj/';
 

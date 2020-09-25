@@ -3,7 +3,7 @@
 
 .carousel__projs {
     --prism-bleed-h: calc(5 * var(--vh));
-    --prism-bleed-w: 2rem;
+    --prism-bleed-w: 5rem;
     --prism-width: var(--scene-width); // contentRect doesn't contain padding
     --prism-ratio: calc(16 / 9);
     --prism-height: calc(var(--prism-width) / var(--prism-ratio));
@@ -19,10 +19,10 @@
 
     @include m.portrait-prism {
         --prism-bleed-h: 0px; // unit is necessary to make sure calc() has result
-        --prism-bleed-w: calc(5 * var(--vw));
-        --prism-ratio: calc(9 / 16);
+        --prism-bleed-w: calc(10 * var(--vw));
+        --prism-ratio: calc(10 / 16);
         --prism-depth: calc(
-            var(--prism-width) / 2 / 1.732 + var(--prism-bleed-w) * 2
+            var(--prism-width) / 2 / 1.732 + var(--prism-bleed-w) * 1
         );
 
         perspective: calc(var(--prism-width) / 2 * 1.732 + 40rem);
@@ -35,23 +35,32 @@
         left: 50%;
         top: 50%;
         // push back far enough to be behind everything.
-        z-index: -1; 
-        transform: translateX(-50%) translateY(-50%); 
+        z-index: -1;
+        transform: translateX(-50%) translateY(-50%);
         width: 80%;
         height: 10px;
         border-radius: 50%;
         background-color: transparent;
-        --shadow-shift-y: calc(var(--prism-height) / 2 + var(--prism-bleed-h) * 2 + 1rem);
+        --shadow-shift-y: calc(
+            var(--prism-height) / 2 + var(--prism-bleed-h) * 2 + 1rem
+        );
         --shadow-shift-x: var(--prism-bleed-h);
         --shadow-blur: calc(var(--prism-bleed-h) / 5 + 5px);
-        box-shadow: 0 var(--shadow-shift-y) var(--shadow-blur) rgba(0, 0, 0, 0.1),
-            var(--shadow-shift-x) var(--shadow-shift-y) calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
-            calc(-1 * var(--shadow-shift-x)) var(--shadow-shift-y) calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
-            calc(2 * var(--shadow-shift-x)) var(--shadow-shift-y) calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2),
-            calc(-2 * var(--shadow-shift-x)) var(--shadow-shift-y) calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2);
+        box-shadow: 0 var(--shadow-shift-y) var(--shadow-blur)
+                rgba(0, 0, 0, 0.1),
+            var(--shadow-shift-x) var(--shadow-shift-y)
+                calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
+            calc(-1 * var(--shadow-shift-x)) var(--shadow-shift-y)
+                calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
+            calc(2 * var(--shadow-shift-x)) var(--shadow-shift-y)
+                calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2),
+            calc(-2 * var(--shadow-shift-x)) var(--shadow-shift-y)
+                calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2);
 
         @include m.portrait-prism {
-            --shadow-shift-y: calc(var(--prism-height) / 2 + var(--prism-bleed-w) + 1rem);
+            --shadow-shift-y: calc(
+                var(--prism-height) / 2 + var(--prism-bleed-w) + 1rem
+            );
             --shadow-shift-x: var(--prism-bleed-w);
             --shadow-blur: calc(var(--prism-bleed-w) / 5 + 5px);
         }

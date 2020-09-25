@@ -12,7 +12,7 @@
     top: calc(5 * var(--vh));
     bottom: calc(5 * var(--vh));
     // matching prism-bleed-w + scene's padding
-    right: calc(2rem + 1rem);
+    right: calc(5rem + 1rem);
     width: #{$nav-size};
     padding: #{$btn-size} #{($nav-size - $btn-size) / 2};
     display: flex;
@@ -23,8 +23,8 @@
         top: unset;
         bottom: 0;
         // matching prism-bleed-w + scene's padding
-        right: calc(5 * var(--vw) + 1rem);
-        left: calc(5 * var(--vw) + 1rem);
+        right: calc(10 * var(--vw) + 1rem);
+        left: calc(10 * var(--vw) + 1rem);
         width: unset;
         height: #{$nav-size};
         padding: #{($nav-size - $btn-size) / 2} #{$btn-size};

@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Swipeable } from 'react-swipeable';
+import { useSwipeable } from 'react-swipeable';
+// https://github.com/FormidableLabs/react-swipeable
 import { useDispatch } from 'react-redux';
 import { toggleCarouselAuto } from '../../store/actions/statusActions';
 import { FORWARD, BACKWARD, RATIO_SWITCH } from '../../shared/_constant';
@@ -8,16 +9,6 @@ import './SwipeRoll.scss';
 
 const SwipeRoll = ({ rollCarousel }) => {
   const dispatch = useDispatch();
-
-  const rollBackward = () => {
-    rollCarousel(BACKWARD);
-    dispatch(toggleCarouselAuto(false));
-  };
-
-  const rollForward = () => {
-    rollCarousel(FORWARD);
-    dispatch(toggleCarouselAuto(false));
-  };
 
   const inLandscape = useRef(
     window.innerWidth / window.innerHeight >= RATIO_SWITCH
@@ -31,20 +22,34 @@ const SwipeRoll = ({ rollCarousel }) => {
     return () => window.removeEventListener('resize', syncRatio);
   }, []);
 
-  return (
-    <Swipeable
-      className="swipe-blocker"
-      onSwipedLeft={() => !inLandscape.current && rollForward()}
-      onSwipedRight={() => !inLandscape.current && rollBackward()}
-      onSwipedUp={() => inLandscape.current && rollForward()}
-      onSwipedDown={() => inLandscape.current && rollBackward()}
-      delta={10}
-      preventDefaultTouchmoveEvent={true}
-      trackTouch={true}
-      trackMouse={true}
-      nodeName="div"
-    />
+  const roll = useCallback(
+    ({ dir }) => {
+      if (
+        (inLandscape.current && dir === 'Up') ||
+        (!inLandscape.current && dir === 'Left')
+      ) {
+        rollCarousel(FORWARD);
+        dispatch(toggleCarouselAuto(false));
+      } else if (
+        (inLandscape.current && dir === 'Down') ||
+        (!inLandscape.current && dir === 'Right')
+      ) {
+        rollCarousel(BACKWARD);
+        dispatch(toggleCarouselAuto(false));
+      }
+    },
+    [rollCarousel, dispatch]
   );
+
+  const swipeHandler = useSwipeable({
+    onSwiped: roll,
+    delta: 10,
+    preventDefaultTouchmoveEvent: true,
+    trackTouch: true,
+    trackMouse: true,
+  });
+
+  return <div className="swipe-blocker" {...swipeHandler} />;
 };
 
 SwipeRoll.propTypes = {

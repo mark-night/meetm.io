@@ -1,0 +1,54 @@
+@use 'sass:color';
+@use '../../../scss/global/var' as v;
+@use '../../../scss/global/mixin' as m;
+
+.swipeable-scroll {
+    position: relative;
+    overflow: hidden;
+
+    $scrollbar-width-bg: 1px;
+    $scrollbar-width-fg: 3px;
+    $scrollbar-color-fg: v.$color-base;
+    $scrollbar-color-bg: color.scale($scrollbar-color-fg, $lightness: 50%);
+
+    &__scrollbar {
+        position: absolute;
+
+        &.bg {
+            width: $scrollbar-width-bg;
+            right: ($scrollbar-width-fg - $scrollbar-width-bg) / 2;
+            top: 0;
+            bottom: 0;
+            background-color: $scrollbar-color-bg;
+        }
+
+        &.fg {
+            z-index: 1;
+            width: $scrollbar-width-fg;
+            right: 0;
+            background-color: $scrollbar-color-fg;
+        }
+    }
+
+    &__content {
+        position: relative;
+        height: 100%;
+        overflow-y: hidden;
+
+        &::before,
+        &::after {
+            // position holder
+            content: '';
+            display: block;
+            width: 100%;
+        }
+
+        &::before {
+            height: var(--top-height);
+        }
+
+        &::after {
+            height: var(--bottom-height);
+        }
+    }
+}
