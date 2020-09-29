@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { updateFilterSelections } from '../../store/actions/filterActions.js';
+import {
+  updateFilterSelections,
+  clearFilterSelections,
+} from '../../store/actions/filterActions.js';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { DUR_FAST } from '../../shared/_constant';
 import { resizeObserver } from '../../shared/_observers';
-import ClearCross from '../ClearCross';
+import ClearCross from './ClearCross';
 import './SelectionStack.scss';
 
-const SelectionStack = props => {
+const SelectionStack = ({ className, dropdownOpened }) => {
   const selections = useSelector(state => state.filter.selections);
-  const dropdownOpened = useSelector(state => state.status.filterDropdown_open);
   const dispatch = useDispatch();
 
   // start observing stack size change
@@ -31,18 +33,18 @@ const SelectionStack = props => {
       {/* a wrapper is necessary to make transition easier */}
       <div className="transition-wrapper">
         <div
-          className={`${props.className} ${
-            dropdownOpened ? 'dropdown-opened' : ''
-          }`}
+          className={`${className} ${dropdownOpened ? 'dropdown-opened' : ''}`}
         >
           <SelectionsFlow
-            className={props.className + '__options'}
+            className={className + '__options'}
             selections={selections}
           />
           <ClearCross
             in={selections.length > 0}
-            parentClass={props.className}
-            clickCmd={() => dispatch(updateFilterSelections(selections, false))}
+            parentClass={className}
+            clickCmd={useCallback(() => dispatch(clearFilterSelections()), [
+              dispatch,
+            ])}
           />
         </div>
       </div>
@@ -52,12 +54,19 @@ const SelectionStack = props => {
 
 SelectionStack.propTypes = {
   className: PropTypes.string,
+  dropdownOpened: PropTypes.bool,
 };
 
 export default SelectionStack;
 
+/**
+ * Flow of all selected options
+ */
 const SelectionsFlow = ({ selections, className }) => {
-  const dispatch = useDispatch();
+  const scrollToBottom = useCallback(el => {
+    const flowDOM = el.parentElement;
+    flowDOM.scrollTop = flowDOM.scrollHeight - flowDOM.offsetHeight;
+  }, []);
 
   return (
     <TransitionGroup className={className} component="ul">
@@ -65,22 +74,11 @@ const SelectionsFlow = ({ selections, className }) => {
         return (
           <CSSTransition
             key={option}
-            classNames={`${className}__option`}
             timeout={DUR_FAST}
-            onEntered={el => {
-              const flowDOM = el.parentElement;
-              flowDOM.scrollTop = flowDOM.scrollHeight - flowDOM.offsetHeight;
-            }}
+            classNames="transition"
+            onEntered={scrollToBottom}
           >
-            <li className={`${className}__option`}>
-              <span className="label">{option}</span>
-              <span
-                className="close"
-                onClick={() => {
-                  dispatch(updateFilterSelections(option, false));
-                }}
-              ></span>
-            </li>
+            <SingleOption className={`${className}__option`} option={option} />
           </CSSTransition>
         );
       })}
@@ -91,4 +89,26 @@ const SelectionsFlow = ({ selections, className }) => {
 SelectionsFlow.propTypes = {
   selections: PropTypes.arrayOf(PropTypes.string),
   className: PropTypes.string,
+};
+
+/**
+ * Single selected option
+ */
+const SingleOption = memo(function SingleOption({ className, option }) {
+  const dispatch = useDispatch();
+  const clearOption = useCallback(
+    () => dispatch(updateFilterSelections(option, false)),
+    [dispatch, option]
+  );
+  return (
+    <li className={className}>
+      <span className="label">{option}</span>
+      <ClearCross in={true} parentClass="option" clickCmd={clearOption} />
+    </li>
+  );
+});
+
+SingleOption.propTypes = {
+  className: PropTypes.string,
+  option: PropTypes.string,
 };

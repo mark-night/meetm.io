@@ -1,54 +1,68 @@
-import React, { useState, useRef } from 'react';
-import { CSSTransition } from 'react-transition-group';
-import { useSelector } from 'react-redux';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import FilterInput from './filterParts/FilterInput';
 import SelectionStack from './filterParts/SelectionStack';
 import FilterDropdown from './filterParts/FilterDropdown';
 import DropdownToggle from './filterParts/DropdownToggle';
-import { DUR_NORMAL } from '../shared/_constant';
 import './Filter.scss';
 
 const Filter = () => {
-  const [dropdownToggled, setDropdownToggled] = useState(false);
-  const open = useSelector(state => state.status.filterDropdown_open && true);
+  const [dropdownOpened, setDropdownOpened] = useState(false);
+  const [dropdownToggleTaught, setDropdownToggleTaught] = useState(false);
   const classBase = 'megaFilter';
   const megaFilter = useRef(null);
 
+  const toggleDropdown = useCallback(() => {
+    setDropdownToggleTaught(true);
+    setDropdownOpened(state => !state);
+  }, []);
+
+  const onInputFocus = useCallback(() => {
+    if (!dropdownToggleTaught) {
+      setDropdownOpened(true);
+    }
+  }, [dropdownToggleTaught]);
+
+  useEffect(() => {
+    const closeDropdown = e => {
+      if (!megaFilter.current.contains(e.target)) {
+        // click anywhere outside megaFilter
+        setDropdownOpened(false);
+      }
+    };
+    document.addEventListener('click', closeDropdown);
+    return () => document.removeEventListener('click', closeDropdown);
+  }, []);
+
   return (
-    <div className={`${classBase} wrapper wrapper--medium`} ref={megaFilter}>
+    <form
+      role="search"
+      className={`${classBase} wrapper wrapper--medium`}
+      ref={megaFilter}
+    >
       <div className={`${classBase}__top`}>
         <FilterInput
           className={`${classBase}__top__input`}
-          triggerDropdown={!dropdownToggled}
+          onInputFocus={onInputFocus}
         />
         <DropdownToggle
           className={`${classBase}__top__toggle`}
-          onToggle={() => setDropdownToggled(true)}
+          dropdownOpened={dropdownOpened}
+          onClick={toggleDropdown}
         />
       </div>
       <div className={`${classBase}__center`}>
-        <SelectionStack className={`${classBase}__center__selections`} />
+        <SelectionStack
+          className={`${classBase}__center__selections`}
+          dropdownOpened={dropdownOpened}
+        />
       </div>
       <div className={`${classBase}__bottom`}>
-        <CSSTransition
-          in={open}
-          classNames="transition"
-          timeout={DUR_NORMAL}
-          // Add CSSTransition outside the inner component instead of adding it
-          // inside the inner component (outmost the JSX it returns) gives the
-          // same experience, but:
-          // As mount/unmount controlled by CSSTransition works on its children
-          // only, it must be placed outside the inner component if some actions
-          // need to be taken on the component's mount/unmount (e.g. useEffect()).
-          unmountOnExit
-        >
-          <FilterDropdown
-            className={`${classBase}__bottom__dropdown`}
-            topNode={megaFilter}
-          />
-        </CSSTransition>
+        <FilterDropdown
+          className={`${classBase}__bottom__dropdown`}
+          dropdownOpened={dropdownOpened}
+        />
       </div>
-    </div>
+    </form>
   );
 };
 

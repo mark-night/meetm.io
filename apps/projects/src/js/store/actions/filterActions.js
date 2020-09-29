@@ -1,6 +1,7 @@
 import {
   UPDATE_FILTER_TERMS,
   UPDATE_FILTER_SELECTIONS,
+  CLEAR_FILTER_SELECTIONS,
 } from '../../shared/_constant';
 import { filterProjs } from './projActions';
 import { parseStrArr, removeArrFromArr } from '../../shared/_utility';
@@ -8,6 +9,11 @@ import { parseStrArr, removeArrFromArr } from '../../shared/_utility';
 export const updateFilterTerms = term => dispatch => {
   const terms = parseStrArr(term.split(','));
   dispatch({ type: UPDATE_FILTER_TERMS, payload: terms });
+  dispatch(filterProjs());
+};
+
+export const clearFilterSelections = () => dispatch => {
+  dispatch({ type: CLEAR_FILTER_SELECTIONS });
   dispatch(filterProjs());
 };
 

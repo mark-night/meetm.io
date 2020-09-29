@@ -1,83 +1,116 @@
-import React, { useEffect } from 'react';
+import React, { memo, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import { updateFilterSelections } from '../../store/actions/filterActions';
-import { toggleFilterDropdown } from '../../store/actions/statusActions';
+import { DUR_NORMAL } from '../../shared/_constant';
 import './FilterDropdown.scss';
 
-const FilterDropdown = props => {
-  const className = props.className;
+const FilterDropdown = ({ className, dropdownOpened }) => {
   const tags = useSelector(state => state.meta.tags);
-  const open = useSelector(state => state.status.filterDropdown_open && true);
   const selections = useSelector(state => state.filter.selections);
-  const dispatch = useDispatch();
-
+  const dropDownWrapper = useRef(null);
+  /**
+   * Directly modifying class in JSX would override classNames added by
+   * CSSTransition, which the slide transitions reply on.
+   * It still works if set mountOnEnter/unmountOnExit on CSSTransition, but
+   * that means all children have to be re-rendered on every dropDown mount/unmount.
+   * So it's better to just hook class manipulations inside useEffect.
+   */
   useEffect(() => {
-    // clicking outside the megaFilter closes it if it is open
-    const closeDropdown = e =>
-      !props.topNode.current.contains(e.target) &&
-      dispatch(toggleFilterDropdown(open && false));
-    document.addEventListener('click', closeDropdown);
-
-    return () => document.removeEventListener('click', closeDropdown);
-  }, [dispatch, open, props.topNode]);
+    const el = dropDownWrapper.current;
+    if (selections.length > 0) {
+      el.classList.add('with-selections');
+    }
+    return () => el.classList.remove('with-selections');
+  }, [selections]);
 
   return (
-    <div
-      className={`transition-wrapper ${
-        selections.length > 0 ? 'with-selections' : ''
-      }`}
+    <CSSTransition
+      in={dropdownOpened}
+      classNames="transition"
+      timeout={DUR_NORMAL}
     >
-      <ul className={`${className}`}>
-        {Object.keys(tags).map(tagGroup => {
-          return tagGroup === 'Category' ? null : (
-            <li key={tagGroup} className={`${className}__optionGroup`}>
-              <FilterOptionGroup
-                className={className}
-                options={tags[tagGroup]}
-                groupLabel={tagGroup}
-              />
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+      <div ref={dropDownWrapper} className="transition-wrapper">
+        <ul className={className}>
+          {Object.keys(tags).map(tagGroup => {
+            return tagGroup === 'Category' ? null : (
+              <li key={tagGroup} className={`${className}__optionGroup`}>
+                <FilterOptionGroup
+                  className={className}
+                  options={tags[tagGroup]}
+                  groupLabel={tagGroup}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </CSSTransition>
   );
 };
 
 FilterDropdown.propTypes = {
   className: PropTypes.string,
-  topNode: PropTypes.object,
+  dropdownOpened: PropTypes.bool,
 };
 
-export default FilterDropdown;
+export default memo(FilterDropdown);
 
-const FilterOptionGroup = props => {
+/**
+ * Filter option group
+ */
+const FilterOptionGroup = memo(function FilterOptionGroup(props) {
   const selections = useSelector(state => state.filter.selections);
-  const dispatch = useDispatch();
   return (
     <ul>
       <li className={`${props.className}__label`}>{props.groupLabel}</li>
       {props.options.map(option => {
         const selected = selections.includes(option);
         return (
-          <li
+          <SingleFilterOption
             key={option}
             className={`${props.className}__option ${
               selected ? 'selected' : ''
             }`}
-            onClick={() => dispatch(updateFilterSelections(option, !selected))}
-          >
-            {option}
-          </li>
+            option={option}
+            selected={selected}
+          />
         );
       })}
     </ul>
   );
-};
+});
 
 FilterOptionGroup.propTypes = {
   groupLabel: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.string),
   className: PropTypes.string,
+};
+
+/**
+ * Single option
+ */
+
+const SingleFilterOption = memo(function SingleFilterOption({
+  className,
+  option,
+  selected,
+}) {
+  const dispatch = useDispatch();
+  return (
+    <li
+      key={option}
+      className={className}
+      onClick={() => dispatch(updateFilterSelections(option, !selected))}
+    >
+      {option}
+    </li>
+  );
+});
+
+SingleFilterOption.propTypes = {
+  className: PropTypes.string,
+  option: PropTypes.string,
+  selected: PropTypes.bool,
 };

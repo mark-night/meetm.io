@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, shallowEqual } from 'react-redux';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { DUR_FAST } from '../shared/_constant';
 import ProjsCarousel from './carouselParts/ProjsCarousel';
@@ -7,7 +7,7 @@ import './Carousel.scss';
 
 const Carousel = () => {
   const projects = useSelector(state => state.meta.projects);
-  const filtered = useSelector(state => state.chosen.filtered);
+  const filtered = useSelector(state => state.chosen.filtered, shallowEqual);
   const classBase = 'carousel';
 
   let key,
@@ -37,7 +37,11 @@ const Carousel = () => {
   }
 
   return (
-    <div className={`${classBase} wrapper`}>
+    <div
+      className={`${classBase} wrapper`}
+      role="region"
+      aria-label="Matched projects"
+    >
       <SwitchTransition mode="out-in">
         <CSSTransition key={key} classNames={classNames} timeout={DUR_FAST}>
           {jsxOutput}

@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateFilterTerms } from '../../store/actions/filterActions';
-import { toggleFilterDropdown } from '../../store/actions/statusActions';
-import ClearCross from '../ClearCross';
+import ClearCross from './ClearCross';
 import './FilterInput.scss';
 
-const FilterInput = props => {
-  const TIME_TO_WAIT_FOR_INPUT = 300;
+const FilterInput = ({ className, onInputFocus }) => {
   const [term, setTerm] = useState('');
-  const selections = useSelector(state => state.filter.selections);
-  const open = useSelector(state => state.status.filterDropdown_open);
   const dispatch = useDispatch();
 
   useEffect(() => {
     // don't update terms for search due to short delay in user input
     const timer = setTimeout(() => {
       dispatch(updateFilterTerms(term));
-    }, TIME_TO_WAIT_FOR_INPUT);
+    }, 300);
     // clean up before next render
     return () => {
       clearTimeout(timer);
@@ -25,23 +21,21 @@ const FilterInput = props => {
   }, [term, dispatch]);
 
   return (
-    <div className={props.className}>
+    <div className={className}>
       <input
         type="text"
         placeholder="Filter projects by keywords (seperat with comma)..."
         value={term}
-        className={`${props.className}__texts`}
+        className={`${className}__texts`}
         onChange={e => setTerm(e.target.value)}
-        onFocus={() => {
-          if (props.triggerDropdown && selections.length === 0 && !open) {
-            dispatch(toggleFilterDropdown(true));
-          }
-        }}
+        onFocus={onInputFocus}
       />
       <ClearCross
         in={term.length > 0}
-        parentClass={props.className}
-        clickCmd={() => setTerm('')}
+        parentClass={className}
+        // without useCallback, clickCmd (reference) passed down changes on
+        // every rerender, thus fail memoization of ClearCross
+        clickCmd={useCallback(() => setTerm(''), [])}
       />
     </div>
   );
@@ -49,7 +43,7 @@ const FilterInput = props => {
 
 FilterInput.propTypes = {
   className: PropTypes.string,
-  triggerDropdown: PropTypes.bool,
+  onInputFocus: PropTypes.func,
 };
 
-export default FilterInput;
+export default memo(FilterInput);

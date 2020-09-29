@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, memo, useMemo, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { updateCarouselAutorollDelay } from '../../store/actions/statusActions';
@@ -22,57 +22,71 @@ const ProjCard = ({ className, proj, onShow, rollCarousel }) => {
     }
   }, [dispatch, onShow, proj.images]);
 
-  const linkSymbol = (
-    <svg className="link__symbol" viewBox="0 0 100 100">
-      <path d="M83.3,83.3H16.7V16.9l16.7-0.2V0H0v100h100V58.3H83.3V83.3z M50,0l16.7,16.7l-25,25l16.7,16.7l25-25L100,50V0H50z" />
-    </svg>
-  );
-
   return (
     <div className={className}>
       <ImageSlide images={proj.images} altText={proj.title} onShow={onShow} />
-      {onShow ? <SwipeRoll rollCarousel={rollCarousel} /> : null}
+      {onShow && <SwipeRoll rollCarousel={rollCarousel} />}
       <div className="info-wrapper">
         {/* To deal with stacking context easier */}
-        <div className="info">
-          <a
-            href={proj.proj_url}
-            target="_blank"
-            rel="noreferrer"
-            className="info__title link"
-          >
-            {proj.title}
-            {linkSymbol}
-          </a>
+        <section
+          className="info"
+          title={`Brief intro to project "${proj.title}".`}
+          aria-labelledby={`project-${proj.id}`}
+        >
+          <header id={`project-${proj.id}`}>
+            <a
+              href={proj.proj_url}
+              target="_blank"
+              rel="noreferrer"
+              className="info__title link"
+              title={`Visit "${proj.title}"`}
+            >
+              {proj.title}
+              {linkSymbol}
+            </a>
+          </header>
           <SwipeableScroll
             wrapperClass="info__data-wrapper"
             scrollClass="info__data"
           >
-            <p className="info__data__tech">
-              {['languages', 'frameworks', 'tools', 'concepts'].map(tech => {
-                return proj[tech].map(tag => {
-                  return (
-                    <Fragment key={`${tech}-${tag}`}>
-                      <span className="info__data__tech__tag">{tag}</span>{' '}
-                    </Fragment>
-                  );
-                });
-              })}
-            </p>
-            {proj.code_url.length === 0 ? null : (
-              <a
-                href={proj.code_url}
-                target="_blank"
-                rel="noreferrer"
-                className="info__data__link link"
-              >
-                &lt;&nbsp;Source Code&nbsp;&gt;
-                {linkSymbol}
-              </a>
+            {useMemo(
+              () => (
+                <Fragment>
+                  <p
+                    className="info__data__tech"
+                    title={`Tech tags for "${proj.title}"`}
+                  >
+                    {['languages', 'frameworks', 'tools', 'concepts'].map(
+                      tech =>
+                        proj[tech].map(tag => (
+                          <span
+                            key={`${tech}-${tag}`}
+                            className="info__data__tech__tag"
+                          >
+                            {tag}
+                          </span>
+                        ))
+                    )}
+                  </p>
+                  {proj.code_url.length > 0 && (
+                    <a
+                      href={proj.code_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="info__data__link link"
+                      title={`Explore source code of "${proj.title}"`}
+                    >
+                      &lt;&nbsp;Source Code&nbsp;&gt;
+                      {linkSymbol}
+                    </a>
+                  )}
+                  <p className="info__data__texts">{proj.desc_long}</p>
+                </Fragment>
+              ),
+              [proj]
             )}
-            <p className="info__data__texts">{proj.desc_long}</p>
           </SwipeableScroll>
-        </div>
+        </section>
       </div>
     </div>
   );
@@ -85,4 +99,10 @@ ProjCard.propTypes = {
   rollCarousel: PropTypes.func,
 };
 
-export default ProjCard;
+export default memo(ProjCard);
+
+const linkSymbol = (
+  <svg className="link__symbol" viewBox="0 0 100 100">
+    <path d="M83.3,83.3H16.7V16.9l16.7-0.2V0H0v100h100V58.3H83.3V83.3z M50,0l16.7,16.7l-25,25l16.7,16.7l25-25L100,50V0H50z" />
+  </svg>
+);

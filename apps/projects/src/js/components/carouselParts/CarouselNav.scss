@@ -7,42 +7,50 @@
 
     position: absolute;
     background-color: v.$color-black;
-    opacity: 0.8;
     // matching prism-bleed-h
     top: calc(5 * var(--vh));
     bottom: calc(5 * var(--vh));
-    // matching prism-bleed-w + scene's padding
-    right: calc(5rem + 1rem);
+    // matching prism-bleed-w
+    right: 5rem;
     width: #{$nav-size};
     padding: #{$btn-size} #{($nav-size - $btn-size) / 2};
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
 
     @include m.portrait-prism {
         top: unset;
         bottom: 0;
-        // matching prism-bleed-w + scene's padding
-        right: calc(10 * var(--vw) + 1rem);
-        left: calc(10 * var(--vw) + 1rem);
+        // matching prism-bleed-w
+        right: calc(10 * var(--vw));
+        left: calc(10 * var(--vw));
         width: unset;
         height: #{$nav-size};
         padding: #{($nav-size - $btn-size) / 2} #{$btn-size};
-        flex-direction: row;
+    }
+
+    &__list {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        @include m.portrait-prism {
+            flex-direction: row;
+        }
     }
 
     &__progress {
         position: absolute;
         width: 100%;
-        height: calc(var(--progress) * 100%);
+        height: 100%;
+        transform-origin: center bottom;
+        transform: scaleY(var(--progress));
         left: 0;
         bottom: 0;
         background-color: v.$color-base;
         opacity: 0.5;
 
         @include m.portrait-prism {
-            height: 100%;
-            width: calc(var(--progress) * 100%);
+            transform-origin: left center;
+            transform: scaleX(var(--progress));
         }
     }
 
@@ -162,6 +170,7 @@
                 transform: translateX(-50%) translateY(-50%) rotate(-90deg);
 
                 &__circle {
+                    --ring-progress: 0;
                     $stroke-thickness: 1em / 16; // 1px
                     $ring-radius: $ring-size / 2 - $stroke-thickness;
                     $ring-length: 2 * 3.14 * $ring-radius;

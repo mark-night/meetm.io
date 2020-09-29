@@ -1,11 +1,23 @@
 import React, { useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Transition } from 'react-transition-group';
 import { useSelector, useDispatch } from 'react-redux';
-import { FORWARD, BACKWARD, AUTOPLAY_DELAY } from '../../shared/_constant';
+import {
+  FORWARD,
+  BACKWARD,
+  AUTOPLAY_DELAY,
+  DUR_NORMAL,
+} from '../../shared/_constant';
 import { toggleCarouselAuto } from '../../store/actions/statusActions';
 import './CarouselNav.scss';
 
-const CarouselNav = ({ rollCarousel, counts, current }) => {
+const transitionStyles = {
+  entering: { opacity: 0.8 },
+  entered: { opacity: 0.8 },
+  exiting: { opacity: 0 },
+  exited: { opacity: 0 },
+};
+const CarouselNav = ({ rollCarousel, counts, current, inProp }) => {
   const classBase = 'carousel-nav';
   const auto = useSelector(state => state.status.carousel_auto);
   const dispatch = useDispatch();
@@ -35,7 +47,6 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
   const rollDelayAFReq = useRef(null);
   const rollDelayAccum = useRef(0);
   useEffect(() => {
-    deactivateProgressUpdate({ AFReq: rollDelayAFReq });
     if (auto) {
       activateProgressUpdate({
         el: rollDelayProgressDOM,
@@ -46,6 +57,7 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
         callback: () => rollCarousel(FORWARD),
       });
     }
+    return () => deactivateProgressUpdate({ AFReq: rollDelayAFReq });
     // current and rollDelay may change at the same time, i.e. when
     // rolling into a project that has different rollDelay
     // todo: if effect will run twice in this case?
@@ -59,13 +71,7 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
   const autoDelayAFReq = useRef(null);
   const autoDelayAccum = useRef(0);
   useEffect(() => {
-    deactivateProgressUpdate({
-      AFReq: autoDelayAFReq,
-      callback: () => {
-        autoDelayAccum.current = 0;
-        autoDelayProgressDOM.current.style.setProperty('--ring-progress', '0');
-      },
-    });
+    const autoDelayProgressDOMCurrent = autoDelayProgressDOM.current;
     if (!auto) {
       activateProgressUpdate({
         el: autoDelayProgressDOM,
@@ -76,6 +82,14 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
         callback: () => dispatch(toggleCarouselAuto(true)),
       });
     }
+    return () =>
+      deactivateProgressUpdate({
+        AFReq: autoDelayAFReq,
+        callback: () => {
+          autoDelayAccum.current = 0;
+          autoDelayProgressDOMCurrent.style.setProperty('--ring-progress', '0');
+        },
+      });
   }, [auto, current, dispatch]);
 
   const dotsJSX = [];
@@ -90,32 +104,44 @@ const CarouselNav = ({ rollCarousel, counts, current }) => {
     );
   }
   return (
-    <ul className={`${classBase}`}>
-      <div // progress for next auto roll
-        className={`${classBase}__progress`}
-        ref={rollDelayProgressDOM}
-      />
-      <li className={`${classBase}__btn`}>
-        <div className="btn prev" onClick={() => rollToUse(BACKWARD)} />
-      </li>
-      {dotsJSX}
-      <li className={`${classBase}__btn`}>
-        <div className="btn next" onClick={() => rollToUse(FORWARD)} />
-      </li>
-      <li className={`${classBase}__switch`}>
-        <div // switch for enable/disable auto roll
-          className={`switch ${auto ? 'auto' : 'manual'}`}
-          onClick={() => dispatch(toggleCarouselAuto(!auto))}
+    <Transition in={inProp} timeout={DUR_NORMAL} appear>
+      {phase => (
+        <nav
+          className={classBase}
+          style={{
+            transition: `opacity ${DUR_NORMAL}ms`,
+            ...transitionStyles[phase],
+          }}
         >
-          <svg className="progress-ring">
-            <circle // progress for turning auto roll back on
-              className="progress-ring__circle"
-              ref={autoDelayProgressDOM}
-            />
-          </svg>
-        </div>
-      </li>
-    </ul>
+          <div // progress for next auto roll
+            className={`${classBase}__progress`}
+            ref={rollDelayProgressDOM}
+          />
+          <ul className={`${classBase}__list`}>
+            <li className={`${classBase}__btn`}>
+              <div className="btn prev" onClick={() => rollToUse(BACKWARD)} />
+            </li>
+            {dotsJSX}
+            <li className={`${classBase}__btn`}>
+              <div className="btn next" onClick={() => rollToUse(FORWARD)} />
+            </li>
+            <li className={`${classBase}__switch`}>
+              <div // switch for enable/disable auto roll
+                className={`switch ${auto ? 'auto' : 'manual'}`}
+                onClick={() => dispatch(toggleCarouselAuto(!auto))}
+              >
+                <svg className="progress-ring">
+                  <circle // progress for turning auto roll back on
+                    className="progress-ring__circle"
+                    ref={autoDelayProgressDOM}
+                  />
+                </svg>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      )}
+    </Transition>
   );
 };
 
@@ -123,6 +149,7 @@ CarouselNav.propTypes = {
   rollCarousel: PropTypes.func,
   counts: PropTypes.number,
   current: PropTypes.number,
+  inProp: PropTypes.bool,
 };
 
 export default CarouselNav;

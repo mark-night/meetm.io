@@ -1,6 +1,6 @@
 @use '../../../scss/global/var' as v;
 @use '../../../scss/global/mixin' as m;
-@use '../ClearCross.scss' as clear-cross;
+@use './ClearCross.scss' as clear-cross;
 
 .megaFilter__top__input {
     display: flex;

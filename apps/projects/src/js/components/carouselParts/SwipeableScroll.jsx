@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useSwipeable } from 'react-swipeable';
 import './SwipeableScroll.scss';
@@ -108,7 +108,7 @@ const SwipeableScroll = ({ children, wrapperClass, scrollClass }) => {
         window.requestAnimationFrame(shrink);
       }
     },
-    delta: 5,
+    delta: 10,
     preventDefaultTouchmoveEvent: true,
     trackTouch: true,
     trackMouse: true,
@@ -143,12 +143,12 @@ const SwipeableScroll = ({ children, wrapperClass, scrollClass }) => {
 };
 
 SwipeableScroll.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element),
+  children: PropTypes.element,
   wrapperClass: PropTypes.string,
   scrollClass: PropTypes.string,
 };
 
-export default SwipeableScroll;
+export default memo(SwipeableScroll);
 
 /**
  * update customized scrollbar

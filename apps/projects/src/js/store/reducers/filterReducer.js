@@ -1,6 +1,7 @@
 import {
   UPDATE_FILTER_TERMS,
   UPDATE_FILTER_SELECTIONS,
+  CLEAR_FILTER_SELECTIONS,
 } from '../../shared/_constant';
 
 export default (state = { terms: [], selections: [] }, action) => {
@@ -10,6 +11,8 @@ export default (state = { terms: [], selections: [] }, action) => {
       return { ...state, terms: payload };
     case UPDATE_FILTER_SELECTIONS:
       return { ...state, selections: payload };
+    case CLEAR_FILTER_SELECTIONS:
+      return { ...state, selections: [] };
     default:
       return state;
   }

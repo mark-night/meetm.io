@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const task = process.env.npm_lifecycle_event;
 const djangoPath = {
@@ -110,6 +111,7 @@ if (task === 'dev') {
       filename: path.resolve(__dirname, djangoPath.templates, 'index.html'),
     }),
     new HtmlWebpackHarddiskPlugin(),
+    new WorkboxPlugin.GenerateSW(),
   ];
 } else if (task === 'build') {
   config.mode = 'production';
@@ -136,6 +138,9 @@ if (task === 'dev') {
           context: path.resolve(__dirname, 'src'),
         },
       ],
+    }),
+    new WorkboxPlugin.GenerateSW({
+      swDest: path.resolve(__dirname, 'templates/service-worker.js'),
     }),
   ];
 

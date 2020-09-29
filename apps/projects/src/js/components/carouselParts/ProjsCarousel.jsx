@@ -1,4 +1,10 @@
-import React, { useState, Fragment, useMemo, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import {
@@ -7,7 +13,7 @@ import {
   POSE_NEXT,
   FORWARD,
   BACKWARD,
-  DUR_FAST,
+  DUR_NORMAL,
 } from '../../shared/_constant';
 import { normalizeIndex } from '../../shared/_utility';
 import { resizeObserver } from '../../shared/_observers';
@@ -15,24 +21,23 @@ import CarouselNav from './CarouselNav';
 import ProjCard from './ProjCard';
 import './ProjsCarousel.scss';
 
+// declare outside component to keep unchanged through rerender
+const poses = [POSE_PREV, POSE_CURRENT, POSE_NEXT];
+const showIdx = 1; // index for POSE_CURRENT
+
 const ProjsCarousel = ({ className, projs }) => {
-  const poses = [POSE_PREV, POSE_CURRENT, POSE_NEXT];
-  const showIdx = 1; // index for POSE_CURRENT
-  const projsExtended = useMemo(() => extendProjs(projs, poses), [
-    projs,
-    poses,
-  ]);
+  const projsExtended = useMemo(() => extendProjs(projs, poses), [projs]);
 
   // steps carousel has rolled
   const [steps, setSteps] = useState(0);
 
-  const roll = direction => {
+  const roll = useCallback(direction => {
     if (direction === FORWARD) {
       setSteps(prevSteps => prevSteps + 1);
     } else if (direction === BACKWARD) {
       setSteps(prevSteps => prevSteps - 1);
     }
-  };
+  }, []);
 
   /**
    * keep observing scene DOM to get and pass its width to prism
@@ -45,48 +50,53 @@ const ProjsCarousel = ({ className, projs }) => {
   }, []);
 
   return (
-    <Fragment>
-      <div className={className} ref={scene}>
-        <TransitionGroup
-          component="div"
-          className={`${className}__prism`}
-          style={{ '--rotation': 120 * steps }}
-        >
-          {poses.map((pos, index) => {
-            // Each pair of proj.key and pose assign proj to a designated face
-            // of the prism, which is then rolled by steps.
-            const shiftedProjIdx = index - showIdx + steps;
-            const proj =
-              projsExtended[normalizeIndex(shiftedProjIdx, projsExtended)];
-            const shiftedPosIdx = index + steps;
-            const pose = poses[normalizeIndex(shiftedPosIdx, poses)];
-            return (
-              <CSSTransition
-                // To address subtle pop when ProjCard appear or disappear
-                key={proj.key}
-                classNames="transition"
-                timeout={DUR_FAST}
-              >
-                <ProjCard
-                  className={`${className}__proj ${pose} ${
-                    index === showIdx ? 'show' : 'ready'
-                  }`}
-                  proj={proj}
-                  onShow={index === showIdx}
-                  rollCarousel={roll}
-                />
-              </CSSTransition>
-            );
-          })}
-        </TransitionGroup>
-      </div>
+    <div className={className} ref={scene}>
+      <TransitionGroup
+        component="div"
+        className={`${className}__prism`}
+        style={{ '--rotation': 120 * steps }}
+      >
+        {poses.map((pos, index) => {
+          // Each pair of proj.key and pose assign proj to a designated face
+          // of the prism, which is then rolled by steps.
+          const shiftedProjIdx = index - showIdx + steps;
+          const proj =
+            projsExtended[normalizeIndex(shiftedProjIdx, projsExtended)];
+          const shiftedPosIdx = index + steps;
+          const pose = poses[normalizeIndex(shiftedPosIdx, poses)];
+          const onShow = index === showIdx;
+          return (
+            <CSSTransition
+              // To address subtle pop when ProjCard appear or disappear
+              key={proj.key}
+              classNames="transition"
+              timeout={DUR_NORMAL}
+              appear
+            >
+              <ProjCard
+                // defining show/ready class on creation is necessary, as
+                // when filtering projs, if a proj card switches poses without
+                // changing onShow status, e.g. from pose-prev to pose-next, the
+                // card won't re-render as nothing changed, thus miss class update
+                className={`${className}__proj ${pose} ${
+                  onShow ? 'show' : 'ready'
+                }`}
+                proj={proj}
+                onShow={onShow}
+                rollCarousel={roll}
+              />
+            </CSSTransition>
+          );
+        })}
+      </TransitionGroup>
       <CarouselNav
         className={`${className}__nav`}
         rollCarousel={roll}
         counts={projs.length}
         current={normalizeIndex(steps, projs)}
+        inProp={projs.length > 1}
       />
-    </Fragment>
+    </div>
   );
 };
 

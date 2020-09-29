@@ -69,6 +69,7 @@
     &::after {
         // page height holder
         content: '';
+        z-index: -1;
         position: absolute;
         bottom: calc(-1.5 * (var(--prism-bleed-h) * 2 + 1rem));
         height: 1px;
@@ -98,25 +99,39 @@
 
     &__proj {
         $standby-opacity: 0.5;
-        $standby-brightness: 0.85;
+        $standby-brightness: 0.7;
         $standby-saturation: 0;
 
         position: absolute;
         width: 100%;
         height: 100%;
+        z-index: -1;
+
         opacity: 1;
         filter: brightness(1) saturate(1);
-        transition: opacity v.$tran-dur-slow, filter v.$tran-dur-slow;
+        transition: opacity v.$tran-dur-normal linear,
+            filter v.$tran-dur-normal linear;
 
         &.ready {
-            z-index: -1;
             opacity: $standby-opacity;
             filter: brightness($standby-brightness)
                 saturate($standby-saturation);
         }
 
-        &.show {
-            z-index: 1;
+        &.transition {
+            &-enter {
+                opacity: 0;
+                &-active {
+                    opacity: $standby-opacity;
+                }
+            }
+
+            &-exit {
+                opacity: $standby-opacity;
+                &-active {
+                    opacity: 0;
+                }
+            }
         }
 
         &.#{v.$pose-prev} {
@@ -142,34 +157,6 @@
 
             &.#{v.$pose-next} {
                 transform: rotateY(120deg) translateZ(var(--prism-depth));
-            }
-        }
-
-        &.transition {
-            &-enter {
-                opacity: 0;
-                filter: brightness(0) saturate(0);
-
-                &-active {
-                    opacity: $standby-opacity;
-                    filter: brightness($standby-brightness)
-                        saturate($standby-saturation);
-                    transition: opacity v.$tran-dur-fast,
-                        filter v.$tran-dur-fast;
-                }
-            }
-
-            &-exit {
-                opacity: $standby-opacity;
-                filter: brightness($standby-brightness)
-                    saturate($standby-saturation);
-
-                &-active {
-                    opacity: 0;
-                    filter: brightness(0) saturate(0);
-                    transition: opacity v.$tran-dur-fast,
-                        filter v.$tran-dur-fast;
-                }
             }
         }
     }

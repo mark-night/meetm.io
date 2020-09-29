@@ -1,6 +1,6 @@
 @use '../../../scss/global/var' as v;
 @use '../../../scss/global/mixin' as m;
-@use '../ClearCross.scss' as clear-cross;
+@use './ClearCross.scss' as clear-cross;
 
 .megaFilter__center__selections {
     display: grid;
@@ -49,29 +49,32 @@
                 line-height: 1;
             }
 
-            & .close {
+            & .clear-cross {
                 @include clear-cross.cross($size: 0.7rem);
             }
 
-            &-enter {
-                max-width: 0;
-                opacity: 0;
+            transition: opacity v.$tran-dur-fast, transform v.$tran-dur-fast;
+            transform-origin: left center;
 
-                &-active {
-                    max-width: 10rem;
-                    opacity: 1;
-                    transition: all v.$tran-dur-fast;
-                }
-            }
-
-            &-exit {
-                max-width: 10rem;
-                opacity: 1;
-
-                &-active {
-                    max-width: 0;
+            &.transition {
+                &-enter {
                     opacity: 0;
-                    transition: all v.$tran-dur-fast;
+                    transform: scaleX(0);
+                    &-active,
+                    &-done {
+                        opacity: 1;
+                        transform: scaleX(1);
+                    }
+                }
+
+                &-exit {
+                    opacity: 1;
+                    transform: scaleX(1);
+                    &-active,
+                    &-done {
+                        opacity: 0;
+                        transform: scaleX(0);
+                    }
                 }
             }
         }

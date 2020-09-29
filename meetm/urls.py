@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
@@ -24,5 +25,7 @@ urlpatterns = [
     path('api/', include('apps.apis.urls')),
     path('admin/', admin.site.urls),
     path('proj/', include('apps.projects.urls')),
+    path('service-worker.js', TemplateView.as_view(template_name='service-worker.js', content_type='application/javascript')),
+    path('workbox-69b5a3b7.js', TemplateView.as_view(template_name='workbox-69b5a3b7.js', content_type='application/javascript')),
     path('', views.index),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

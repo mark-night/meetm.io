@@ -6,13 +6,14 @@ export const resizeObserver = new ResizeObserver(entries => {
       case document.querySelector('div.megaFilter__center'): {
         // modify filter dropdown's height to maintain static height for filter
         // as a whole UI element
-        const offsetY = entry.target.getBoundingClientRect().y;
-        document
-          .querySelector('.megaFilter__bottom')
-          .style.setProperty(
-            '--height',
-            `calc(95 * var(--vh) - ${offsetY + height}px)`
-          );
+        const dropdown = document.querySelector(
+          '.megaFilter__bottom .transition-wrapper'
+        );
+        const offsetY = dropdown.getBoundingClientRect().y;
+        dropdown.style.setProperty(
+          '--height',
+          `calc(95 * var(--vh) - ${offsetY}px)`
+        );
         break;
       }
       case document.querySelector('.carousel__projs'):
@@ -31,5 +32,5 @@ export const resizeObserver = new ResizeObserver(entries => {
       default:
         break;
     }
-  } 
+  }
 });

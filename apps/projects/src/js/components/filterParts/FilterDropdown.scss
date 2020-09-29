@@ -1,6 +1,77 @@
 @use '../../../scss/global/var' as v;
 @use '../../../scss/global/mixin' as m;
 
+.megaFilter__bottom .transition-wrapper {
+    @include m.big-soft-shadow;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    @include m.tiny-width {
+        padding: 1rem;
+    }
+    background-color: #fff;
+    border-top-style: solid;
+    border-top-color: v.$color-pale;
+    border-top-width: 0;
+    border-radius: 10px 10px 10px 10px;
+    overflow: hidden;
+    transition: border v.$tran-dur-fast, padding v.$tran-dur-fast,
+        max-height v.$tran-dur-fast;
+
+    &.with-selections {
+        border-top-width: 1px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    padding: 0 2rem;
+    @include m.tiny-width {
+        padding: 0 1rem;
+    }
+    max-height: 0;
+
+    &.transition {
+        &-enter {
+            max-height: 0;
+            padding: 0 2rem;
+            @include m.tiny-width {
+                padding: 0 1rem;
+            }
+            transition: all v.$tran-dur-fast;
+
+            &-active,
+            &-done {
+                padding: 1rem 2rem;
+                @include m.tiny-width {
+                    padding: 1rem;
+                }
+                max-height: var(--height);
+            }
+        }
+
+        &-exit {
+            padding: 1rem 2rem;
+            @include m.tiny-width {
+                padding: 1rem;
+            }
+            max-height: var(--height);
+
+            &-active,
+            &-done {
+                max-height: 0;
+                padding: 0 2rem;
+                @include m.tiny-width {
+                    padding: 0 1rem;
+                }
+                border-top-width: 0;
+                transition: all v.$tran-dur-fast;
+            }
+        }
+    }
+}
+
 .megaFilter__bottom__dropdown {
     touch-action: pan-y;
     overflow-x: hidden;
