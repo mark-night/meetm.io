@@ -11,7 +11,7 @@
     top: calc(5 * var(--vh));
     bottom: calc(5 * var(--vh));
     // matching prism-bleed-w
-    right: 5rem;
+    right: 6rem;
     width: #{$nav-size};
     padding: #{$btn-size} #{($nav-size - $btn-size) / 2};
 
@@ -19,8 +19,8 @@
         top: unset;
         bottom: 0;
         // matching prism-bleed-w
-        right: calc(10 * var(--vw));
-        left: calc(10 * var(--vw));
+        right: calc(10 * var(--vw) + 1rem);
+        left: calc(10 * var(--vw) + 1rem);
         width: unset;
         height: #{$nav-size};
         padding: #{($nav-size - $btn-size) / 2} #{$btn-size};
