@@ -6,21 +6,14 @@ import App from './components/App';
 import store from './store/store';
 
 // Register Service Worker (via Workbox)
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('/service-worker.js').then(
-//       registration => {
-//         console.log(
-//           'Service Worker registered with scope: ',
-//           registration.scope
-//         );
-//       },
-//       err => {
-//         console.log('Service Worker failed registration: ', err);
-//       }
-//     );
-//   });
-// }
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () =>
+    // register only after pages is loaded, so service worker won't block page
+    // register app exclusive service worker while expand sw's scope to upper level
+    // https://w3c.github.io/ServiceWorker/#service-worker-script-response
+    navigator.serviceWorker.register('/proj/sw-proj.js', { scope: '/' })
+  );
+}
 
 ReactDOM.render(
   <Provider store={store}>

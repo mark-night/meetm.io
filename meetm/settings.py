@@ -67,10 +67,10 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_REGEX_WHITELIST = [
-    r"^https?://localhost(:\d+)?$",
-    r"^https?://127.0.0.1(:\d+)?$",
-    r"^https?://192.168.68.105(:\d+)?$",
-    r"^https?://markcave.local(:\d+)?$",
+    r"^http://localhost(:\d+)?$",
+    r"^http://127.0.0.1(:\d+)?$",
+    r"^http://192.168.68.105(:\d+)?$",
+    r"^http://markcave.local(:\d+)?$",
 ]
 
 ROOT_URLCONF = 'meetm.urls'

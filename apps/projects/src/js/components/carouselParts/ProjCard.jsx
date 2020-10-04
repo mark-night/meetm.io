@@ -23,11 +23,14 @@ const ProjCard = ({ className, proj, onShow, rollCarousel }) => {
   }, [dispatch, onShow, proj.images]);
 
   return (
-    <div className={className}>
+    <div
+      className={className}
+      // max opacity for show/ready are different
+      style={{ '--opacity': `${onShow ? 1 : 0.5}` }}
+    >
       <ImageSlide images={proj.images} altText={proj.title} onShow={onShow} />
       {onShow && <SwipeRoll rollCarousel={rollCarousel} />}
       <div className="info-wrapper">
-        {/* To deal with stacking context easier */}
         <section
           className="info"
           title={`Brief intro to project "${proj.title}".`}

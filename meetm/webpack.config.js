@@ -3,19 +3,19 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const task = process.env.npm_lifecycle_event;
 const djangoPath = {
   // ! trailing slash is necessary
   templates: 'templates/meetm/',
-  static: 'static/meetm/'
+  static: 'static/meetm/',
 };
 const subDir = { js: 'js', css: 'css', img: 'img' };
 const packOption = {
   hashLength: 8,
   analyzer: false,
-  splitVendors: false
+  splitVendors: false,
 };
 
 const config = {
@@ -23,7 +23,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, djangoPath.static),
     publicPath: '/' + djangoPath.static,
-    hashDigestLength: packOption.hashLength
+    hashDigestLength: packOption.hashLength,
   },
   module: {
     rules: [
@@ -33,20 +33,20 @@ const config = {
           'css-loader',
           {
             loader: 'resolve-url-loader',
-            options: { keepQuery: true }
+            options: { keepQuery: true },
           },
           {
             loader: 'sass-loader',
-            options: { sourceMap: true }
-          }
-        ]
+            options: { sourceMap: true },
+          },
+        ],
       },
       {
         test: /\.jsx?$/i,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
@@ -57,12 +57,12 @@ const config = {
             // larger files fallback to file-loader with following options
             // modify context so [path] doesn't contain leading 'src'
             context: path.join(__dirname, 'src'),
-            name: `[path][name].[contenthash:${packOption.hashLength}].[ext][query]`
-          }
-        }
-      }
-    ]
-  }
+            name: `[path][name].[contenthash:${packOption.hashLength}].[ext][query]`,
+          },
+        },
+      },
+    ],
+  },
 };
 
 if (task === 'dev') {
@@ -71,27 +71,27 @@ if (task === 'dev') {
   config.devServer = {
     contentBase: [
       path.resolve(__dirname, djangoPath.static),
-      path.resolve(__dirname, djangoPath.templates)
+      path.resolve(__dirname, djangoPath.templates),
     ],
     watchContentBase: true,
+    hot: true,
     port: 3000,
     host: '0.0.0.0',
-    hot: true,
-    overlay: true
+    overlay: true,
   };
 
   config.module.rules[0].use.unshift('style-loader');
 
   config.plugins = [
     new MiniCssExtractPlugin({
-      filename: path.join(subDir.css, '[name].css')
+      filename: path.join(subDir.css, '[name].css'),
     }),
     new HtmlWebpackPlugin({
       alwaysWriteToDisk: true, // supported by html-webpack-harddisk-plugin
       template: './src/index.html',
-      filename: path.resolve(__dirname, djangoPath.templates, 'index.html')
+      filename: path.resolve(__dirname, djangoPath.templates, 'index.html'),
     }),
-    new HtmlWebpackHarddiskPlugin()
+    new HtmlWebpackHarddiskPlugin(),
   ];
 } else if (task === 'build') {
   config.mode = 'production';
@@ -104,21 +104,21 @@ if (task === 'dev') {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: path.join(subDir.css, '[name].[hash].css'),
-      chunkFilename: path.join(subDir.css, '[id].[chunkhash].css')
+      chunkFilename: path.join(subDir.css, '[id].[chunkhash].css'),
     }),
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      filename: path.resolve(__dirname, djangoPath.templates, 'index.html')
+      filename: path.resolve(__dirname, djangoPath.templates, 'index.html'),
     }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          // image assets in img/static/ are not involved in webpack bundling
-          from: 'img/static/**/*',
-          context: path.resolve(__dirname, 'src')
-        }
-      ]
-    })
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     {
+    //       // image assets in img/static/ are not involved in webpack bundling
+    //       from: 'img/static/**/*',
+    //       context: path.resolve(__dirname, 'src')
+    //     }
+    //   ]
+    // })
   ];
 
   config.optimization = {
@@ -127,10 +127,10 @@ if (task === 'dev') {
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors'
-        }
-      }
-    }
+          name: 'vendors',
+        },
+      },
+    },
   };
 }
 

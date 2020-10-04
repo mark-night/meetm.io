@@ -1,10 +1,10 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin'),
+  HtmlWebpackPlugin = require('html-webpack-plugin'),
+  HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin'),
+  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
+  WorkboxPlugin = require('workbox-webpack-plugin'),
+  CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const task = process.env.npm_lifecycle_event;
 const djangoPath = {
@@ -17,6 +17,7 @@ const packOption = {
   hashLength: 8,
   analyzer: false,
   splitVendors: false,
+  workbox: true,
 };
 
 const config = {
@@ -92,10 +93,10 @@ if (task === 'dev') {
     ],
     contentBasePublicPath: '/proj/',
     watchContentBase: true,
+    hot: true,
     port: 3000,
     host: '0.0.0.0',
     disableHostCheck: true,
-    hot: true,
     overlay: true,
   };
 
@@ -111,17 +112,19 @@ if (task === 'dev') {
       filename: path.resolve(__dirname, djangoPath.templates, 'index.html'),
     }),
     new HtmlWebpackHarddiskPlugin(),
-    new WorkboxPlugin.GenerateSW(),
   ];
 } else if (task === 'build') {
   config.mode = 'production';
   config.output.filename = path.join(subDir.js, '[name].[hash].js');
-  config.output.chunkFilename = path.join(subDir.js, '[id].[chunkhash].js');
+  config.output.chunkFilename = path.join(subDir.js, '[name].[chunkhash].js');
 
   config.module.rules[0].use.unshift(MiniCssExtractPlugin.loader);
 
   config.plugins = [
     new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [path.resolve(__dirname, 'src/manifest.json')],
+    }),
     new MiniCssExtractPlugin({
       filename: path.join(subDir.css, '[name].[hash].css'),
       chunkFilename: path.join(subDir.css, '[id].[chunkhash].css'),
@@ -130,19 +133,32 @@ if (task === 'dev') {
       template: './src/index.html',
       filename: path.resolve(__dirname, djangoPath.templates, 'index.html'),
     }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          // image assets in img/static/ are not involved in webpack bundling
-          from: 'img/static/**/*',
-          context: path.resolve(__dirname, 'src'),
-        },
-      ],
-    }),
-    new WorkboxPlugin.GenerateSW({
-      swDest: path.resolve(__dirname, 'templates/service-worker.js'),
-    }),
   ];
+  if (packOption.workbox) {
+    config.plugins.push(
+      new WorkboxPlugin.InjectManifest({
+        // compileSrc: false,
+        swSrc: './src/js/swSrc.js',
+        swDest: path.resolve(__dirname, djangoPath.templates, 'sw-proj.js'),
+        manifestTransforms: [
+          async entries => {
+            const results = entries.map(entry => {
+              const markup = new RegExp(djangoPath.templates);
+              if (entry.url.match(markup)) {
+                entry.url = '/proj/';
+              }
+              const hashed = new RegExp(`\\.\\w{${packOption.hashLength}}\\.`);
+              if (entry.url.match(hashed)) {
+                entry.revision = null;
+              }
+              return entry;
+            });
+            return { manifest: results, warnings: [] };
+          },
+        ],
+      })
+    );
+  }
 
   config.optimization = {
     splitChunks: {

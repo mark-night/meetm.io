@@ -16,10 +16,10 @@ export const resizeObserver = new ResizeObserver(entries => {
         );
         break;
       }
-      case document.querySelector('.carousel__projs'):
+      case document.querySelector('.carousel__projs__scene'):
         // pass scene width to css for prism calculation
         document
-          .querySelector('.carousel__projs')
+          .querySelector('.carousel__projs__scene')
           .style.setProperty('--scene-width', `${width}px`);
         break;
       case document.documentElement:

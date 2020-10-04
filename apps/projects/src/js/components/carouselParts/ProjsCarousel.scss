@@ -2,161 +2,112 @@
 @use '../../../scss/global/mixin' as m;
 
 .carousel__projs {
-    --prism-bleed-h: calc(5 * var(--vh));
-    --prism-bleed-w: 5rem;
-    --prism-width: var(--scene-width); // contentRect doesn't contain padding
-    --prism-ratio: calc(16 / 9);
-    --prism-height: calc(var(--prism-width) / var(--prism-ratio));
-    --prism-depth: calc(
-        var(--prism-height) / 2 / 1.732 + var(--prism-bleed-h) * 2
-    );
-
-    position: relative;
     width: 100%;
-    height: calc(var(--prism-height) + 2 * var(--prism-bleed-h));
-    padding: var(--prism-bleed-h) var(--prism-bleed-w);
-    perspective: calc(var(--prism-height) / 2 * 1.732 + 50rem);
+    height: 100%;
 
-    @include m.portrait-prism {
-        --prism-bleed-h: 0px; // unit is necessary to make sure calc() has result
-        --prism-bleed-w: calc(10 * var(--vw));
-        --prism-ratio: calc(10 / 16);
+    &__scene {
+        --prism-bleed-h: calc(5 * var(--vh));
+        --prism-bleed-w: 5rem;
+        --prism-width: var(
+            --scene-width
+        ); // contentRect doesn't contain padding
+        --prism-ratio: calc(16 / 9);
+        --prism-height: calc(var(--prism-width) / var(--prism-ratio));
         --prism-depth: calc(
-            var(--prism-width) / 2 / 1.732 + var(--prism-bleed-w) * 1
+            var(--prism-height) / 2 / 1.732 + var(--prism-bleed-h) * 2
         );
-
-        perspective: calc(var(--prism-width) / 2 * 1.732 + 40rem);
-    }
-
-    &::before {
-        // shadow
-        content: '';
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        // push back far enough to be behind everything.
-        z-index: -1;
-        transform: translateX(-50%) translateY(-50%);
-        width: 80%;
-        height: 10px;
-        border-radius: 50%;
-        background-color: transparent;
-        --shadow-shift-y: calc(
-            var(--prism-height) / 2 + var(--prism-bleed-h) * 2 + 1rem
-        );
-        --shadow-shift-x: var(--prism-bleed-h);
-        --shadow-blur: calc(var(--prism-bleed-h) / 5 + 5px);
-        box-shadow: 0 var(--shadow-shift-y) var(--shadow-blur)
-                rgba(0, 0, 0, 0.1),
-            var(--shadow-shift-x) var(--shadow-shift-y)
-                calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
-            calc(-1 * var(--shadow-shift-x)) var(--shadow-shift-y)
-                calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
-            calc(2 * var(--shadow-shift-x)) var(--shadow-shift-y)
-                calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2),
-            calc(-2 * var(--shadow-shift-x)) var(--shadow-shift-y)
-                calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2);
-
-        @include m.portrait-prism {
-            --shadow-shift-y: calc(
-                var(--prism-height) / 2 + var(--prism-bleed-w) + 1rem
-            );
-            --shadow-shift-x: var(--prism-bleed-w);
-            --shadow-blur: calc(var(--prism-bleed-w) / 5 + 5px);
-        }
-    }
-
-    &::after {
-        // page height holder
-        content: '';
-        z-index: -1;
-        position: absolute;
-        bottom: calc(-1.5 * (var(--prism-bleed-h) * 2 + 1rem));
-        height: 1px;
-        left: 0;
-        right: 0;
-        background-color: transparent;
-
-        @include m.portrait-prism {
-            bottom: calc(-2 * (var(--prism-bleed-w) + 1rem));
-        }
-    }
-
-    &__prism {
         position: relative;
         width: 100%;
-        height: 100%;
-        transform-style: preserve-3d;
-        transform: translateZ(calc(-1 * var(--prism-depth)))
-            rotateX(calc(1deg * var(--rotation)));
-        transition: transform v.$tran-dur-slow;
+        height: calc(var(--prism-height) + 2 * var(--prism-bleed-h));
+        padding: var(--prism-bleed-h) var(--prism-bleed-w);
+        perspective: calc(var(--prism-height) / 2 * 1.732 + 50rem);
 
         @include m.portrait-prism {
-            transform: translateZ(calc(-1 * var(--prism-depth)))
-                rotateY(calc(-1deg * var(--rotation)));
-        }
-    }
-
-    &__proj {
-        $standby-opacity: 0.5;
-        $standby-brightness: 0.7;
-        $standby-saturation: 0;
-
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-
-        opacity: 1;
-        filter: brightness(1) saturate(1);
-        transition: opacity v.$tran-dur-normal linear,
-            filter v.$tran-dur-normal linear;
-
-        &.ready {
-            opacity: $standby-opacity;
-            filter: brightness($standby-brightness)
-                saturate($standby-saturation);
+            --prism-bleed-h: 0px; // unit is necessary to make sure calc() has result
+            --prism-bleed-w: calc(10 * var(--vw));
+            --prism-ratio: calc(10 / 16);
+            --prism-depth: calc(
+                var(--prism-width) / 2 / 1.732 + var(--prism-bleed-w) * 1
+            );
+            perspective: calc(var(--prism-width) / 2 * 1.732 + 40rem);
         }
 
-        &.transition {
-            &-enter {
-                opacity: 0;
-                &-active {
-                    opacity: $standby-opacity;
-                }
+        &::before {
+            // shadow
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            // push back far enough to be behind everything.
+            z-index: -1;
+            transform: translateX(-50%) translateY(-50%);
+            width: 80%;
+            height: 10px;
+            border-radius: 50%;
+            background-color: transparent;
+            --shadow-shift-y: calc(
+                var(--prism-height) / 2 + var(--prism-bleed-h) * 2 + 1rem
+            );
+            --shadow-shift-x: var(--prism-bleed-h);
+            --shadow-blur: calc(var(--prism-bleed-h) / 5 + 5px);
+            box-shadow: 0 var(--shadow-shift-y) var(--shadow-blur)
+                    rgba(0, 0, 0, 0.1),
+                var(--shadow-shift-x) var(--shadow-shift-y)
+                    calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
+                calc(-1 * var(--shadow-shift-x)) var(--shadow-shift-y)
+                    calc(var(--shadow-blur) * 1.5) rgba(0, 0, 0, 0.1),
+                calc(2 * var(--shadow-shift-x)) var(--shadow-shift-y)
+                    calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2),
+                calc(-2 * var(--shadow-shift-x)) var(--shadow-shift-y)
+                    calc(var(--shadow-blur) * 2.5) rgba(0, 0, 0, 0.2);
+
+            @include m.portrait-prism {
+                --shadow-shift-y: calc(
+                    var(--prism-height) / 2 + var(--prism-bleed-w) + 1rem
+                );
+                --shadow-shift-x: var(--prism-bleed-w);
+                --shadow-blur: calc(var(--prism-bleed-w) / 5 + 5px);
             }
+        }
 
-            &-exit {
-                opacity: $standby-opacity;
-                &-active {
-                    opacity: 0;
-                }
+        &::after {
+            // page height holder
+            content: '';
+            z-index: -1;
+            position: absolute;
+            bottom: calc(-1.5 * (var(--prism-bleed-h) * 2 + 1rem));
+            height: 1px;
+            left: 0;
+            right: 0;
+            background-color: transparent;
+
+            @include m.portrait-prism {
+                bottom: calc(-2 * (var(--prism-bleed-w) + 1rem));
             }
         }
 
-        &.#{v.$pose-prev} {
-            transform: rotateX(120deg) translateZ(calc(var(--prism-depth)));
-        }
-
-        &.#{v.$pose-current} {
-            transform: rotateX(0deg) translateZ(calc(var(--prism-depth)));
-        }
-
-        &.#{v.$pose-next} {
-            transform: rotateX(-120deg) translateZ(calc(var(--prism-depth)));
-        }
-
-        @include m.portrait-prism {
-            &.#{v.$pose-prev} {
-                transform: rotateY(-120deg) translateZ(var(--prism-depth));
+        &__prism-z {
+            // separate translate and rotate transforms, as rotate needs
+            // transition while translate doesn't
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform: translateZ(calc(-1 * var(--prism-depth)));
+            @include m.portrait-prism {
+                transform: translateZ(calc(-1 * var(--prism-depth)));
             }
+        }
 
-            &.#{v.$pose-current} {
-                transform: rotateY(0deg) translateZ(var(--prism-depth));
-            }
+        &__prism {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform: rotateX(calc(1deg * var(--rotation)));
+            transition: transform v.$tran-dur-slow;
 
-            &.#{v.$pose-next} {
-                transform: rotateY(120deg) translateZ(var(--prism-depth));
+            @include m.portrait-prism {
+                transform: rotateY(calc(-1deg * var(--rotation)));
             }
         }
     }

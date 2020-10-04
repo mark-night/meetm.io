@@ -25,19 +25,17 @@
         &__message {
             &-enter {
                 opacity: 0;
-
                 &-active {
                     opacity: 1;
-                    transition: all v.$tran-dur-fast;
+                    transition: opacity v.$tran-dur-fast;
                 }
             }
 
             &-exit {
                 opacity: 1;
-
                 &-active {
                     opacity: 0;
-                    transition: all v.$tran-dur-fast;
+                    transition: opacity v.$tran-dur-fast;
                 }
             }
         }
@@ -45,23 +43,25 @@
         &__projs {
             &-enter {
                 opacity: 0;
-                transform: scale(0);
-
-                &-active {
+                transform: scale(0.5);
+                &-active,
+                &-done {
                     opacity: 1;
                     transform: scale(1);
-                    transition: all v.$tran-dur-fast linear;
+                    transition: opacity v.$tran-dur-fast,
+                        transform v.$tran-dur-fast;
                 }
             }
 
             &-exit {
                 opacity: 1;
                 transform: scale(1);
-
-                &-active {
+                &-active,
+                &-done {
                     opacity: 0;
-                    transform: scale(0);
-                    transition: all v.$tran-dur-fast linear;
+                    transform: scale(0.5);
+                    transition: opacity v.$tran-dur-fast,
+                        transform v.$tran-dur-fast;
                 }
             }
         }
