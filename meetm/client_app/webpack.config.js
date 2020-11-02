@@ -1,34 +1,29 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin'),
-  HtmlWebpackPlugin = require('html-webpack-plugin'),
-  HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin'),
-  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-  WorkboxPlugin = require('workbox-webpack-plugin'),
-  CopyWebpackPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const task = process.env.npm_lifecycle_event;
 const djangoPath = {
   // ! trailing slash is necessary
-  templates: 'templates/projects/',
-  static: 'static/projects/',
+  templates: 'templates/meetm/',
+  static: 'static/meetm/',
 };
 const subDir = { js: 'js', css: 'css', img: 'img' };
 const packOption = {
   hashLength: 8,
   analyzer: false,
   splitVendors: false,
-  workbox: true,
 };
 
 const config = {
-  entry: './src/js/index.jsx',
+  entry: './src/js/index.js',
   output: {
-    path: path.resolve(__dirname, djangoPath.static),
+    path: path.resolve(__dirname, '..', djangoPath.static),
     publicPath: '/' + djangoPath.static,
     hashDigestLength: packOption.hashLength,
-  },
-  resolve: {
-    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
@@ -39,13 +34,6 @@ const config = {
           {
             loader: 'resolve-url-loader',
             options: { keepQuery: true },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: true,
-              plugins: [require('autoprefixer')],
-            },
           },
           {
             loader: 'sass-loader',
@@ -59,11 +47,6 @@ const config = {
         use: {
           loader: 'babel-loader',
         },
-      },
-      {
-        test: /\.jsx?$/i,
-        include: /node_modules/,
-        use: 'react-hot-loader/webpack',
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
@@ -84,19 +67,16 @@ const config = {
 
 if (task === 'dev') {
   config.output.filename = path.join(subDir.js, '[name].js');
-  config.devtool = 'eval-source-map';
 
   config.devServer = {
     contentBase: [
-      path.resolve(__dirname, djangoPath.static),
-      path.resolve(__dirname, djangoPath.templates),
+      path.resolve(__dirname, '..', djangoPath.static),
+      path.resolve(__dirname, '..', djangoPath.templates),
     ],
-    contentBasePublicPath: '/proj/',
     watchContentBase: true,
     hot: true,
     port: 3000,
     host: '0.0.0.0',
-    disableHostCheck: true,
     overlay: true,
   };
 
@@ -109,56 +89,38 @@ if (task === 'dev') {
     new HtmlWebpackPlugin({
       alwaysWriteToDisk: true, // supported by html-webpack-harddisk-plugin
       template: './src/index.html',
-      filename: path.resolve(__dirname, djangoPath.templates, 'index.html'),
+      filename: path.resolve(
+        __dirname,
+        '..',
+        djangoPath.templates,
+        'index.html'
+      ),
     }),
     new HtmlWebpackHarddiskPlugin(),
   ];
 } else if (task === 'build') {
   config.mode = 'production';
   config.output.filename = path.join(subDir.js, '[name].[hash].js');
-  config.output.chunkFilename = path.join(subDir.js, '[name].[chunkhash].js');
+  config.output.chunkFilename = path.join(subDir.js, '[id].[chunkhash].js');
 
   config.module.rules[0].use.unshift(MiniCssExtractPlugin.loader);
 
   config.plugins = [
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [path.resolve(__dirname, 'src/manifest.json')],
-    }),
     new MiniCssExtractPlugin({
       filename: path.join(subDir.css, '[name].[hash].css'),
       chunkFilename: path.join(subDir.css, '[id].[chunkhash].css'),
     }),
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      filename: path.resolve(__dirname, djangoPath.templates, 'index.html'),
+      filename: path.resolve(
+        __dirname,
+        '..',
+        djangoPath.templates,
+        'index.html'
+      ),
     }),
   ];
-  if (packOption.workbox) {
-    config.plugins.push(
-      new WorkboxPlugin.InjectManifest({
-        // compileSrc: false,
-        swSrc: './src/js/swSrc.js',
-        swDest: path.resolve(__dirname, djangoPath.templates, 'sw-proj.js'),
-        manifestTransforms: [
-          async entries => {
-            const results = entries.map(entry => {
-              const markup = new RegExp(djangoPath.templates);
-              if (entry.url.match(markup)) {
-                entry.url = '/proj/';
-              }
-              const hashed = new RegExp(`\\.\\w{${packOption.hashLength}}\\.`);
-              if (entry.url.match(hashed)) {
-                entry.revision = null;
-              }
-              return entry;
-            });
-            return { manifest: results, warnings: [] };
-          },
-        ],
-      })
-    );
-  }
 
   config.optimization = {
     splitChunks: {

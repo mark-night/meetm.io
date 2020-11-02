@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { signIn, signOut } from '../actions';
+import { GOOGLE_CLIENT_ID } from './secret';
 
 class GoogleAuth extends React.Component {
   componentDidMount() {
@@ -9,9 +10,8 @@ class GoogleAuth extends React.Component {
       // callback only get called after api resources are loaded
       window.gapi.client
         .init({
-          clientId:
-            '752098821353-j1iqh97ts5edu3v0ds68blf374ca8ra0.apps.googleusercontent.com',
-          scope: 'email'
+          clientId: GOOGLE_CLIENT_ID,
+          scope: 'email',
         })
         .then(() => {
           this.auth = window.gapi.auth2.getAuthInstance();
@@ -63,7 +63,7 @@ class GoogleAuth extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isSignedIn: state.auth.isSignedIn
+    isSignedIn: state.auth.isSignedIn,
   };
 };
 

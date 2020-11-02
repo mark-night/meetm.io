@@ -1,6 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,react,django,node,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,react,django,node,python
 
+.env
+secret.js
+.envrc
+.direnv
+
 ### Django ###
 *.log
 *.pot
@@ -15,7 +20,7 @@ db.sqlite3-journal
 .prettierrc*
 .stylelintrc*
 .eslintrc*
-
+.direnv
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
 # <django-project-name>/staticfiles/

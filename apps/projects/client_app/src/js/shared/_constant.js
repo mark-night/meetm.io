@@ -1,10 +1,8 @@
 /**
- * PATH ROOT FOR MEDIA LOADING
+ * PATH FOR MEDIA/META SOURCE
  */
-// const host = 'http://192.168.68.105:8000';
-const host = '';
-export const MEDIA_ROOT = host;
-export const FETCH_SOURCE = host + '/api/proj/';
+export const MEDIA_ROOT = '';
+export const FETCH_SOURCE = '/api/proj/';
 
 /**
  * IMAGE USABLE WIDTHS

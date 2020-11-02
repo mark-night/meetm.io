@@ -9,35 +9,35 @@ const djangoPath = {
   // ! trailing slash is necessary
   templates: 'templates/twitch/',
   static: 'static/twitch/',
-  basename: '/twitch/'
+  basename: '/twitch/',
 };
 const subDir = { js: 'js', css: 'css' };
 const packOption = {
   analyzer: false,
-  splitVendors: false
+  splitVendors: false,
 };
 
 const config = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, djangoPath.static),
-    publicPath: '/' + djangoPath.static
+    path: path.resolve(__dirname, '..', djangoPath.static),
+    publicPath: '/' + djangoPath.static,
   },
   module: {
     rules: [
       {
         test: /\.css$/i,
-        use: ['css-loader']
+        use: ['css-loader'],
       },
       {
         test: /\.js?$/i,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
-      }
-    ]
-  }
+          loader: 'babel-loader',
+        },
+      },
+    ],
+  },
 };
 
 if (task === 'dev') {
@@ -45,15 +45,15 @@ if (task === 'dev') {
 
   config.devServer = {
     contentBase: [
-      path.resolve(__dirname, djangoPath.static),
-      path.resolve(__dirname, djangoPath.templates)
+      path.resolve(__dirname, '..', djangoPath.static),
+      path.resolve(__dirname, '..', djangoPath.templates),
     ],
     watchContentBase: true,
     host: '0.0.0.0',
     port: 3000,
     contentBasePublicPath: djangoPath.basename,
     overlay: true,
-    hot: true
+    hot: true,
   };
 
   config.module.rules[0].use.unshift('style-loader');
@@ -62,9 +62,14 @@ if (task === 'dev') {
     new HtmlWebpackPlugin({
       alwaysWriteToDisk: true,
       template: './src/templates/index.html',
-      filename: path.resolve(__dirname, djangoPath.templates, 'index.html')
+      filename: path.resolve(
+        __dirname,
+        '..',
+        djangoPath.templates,
+        'index.html'
+      ),
     }),
-    new HtmlWebpackHarddiskPlugin()
+    new HtmlWebpackHarddiskPlugin(),
   ];
 } else if (task === 'build') {
   config.mode = 'production';
@@ -78,12 +83,17 @@ if (task === 'dev') {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: path.join(subDir.css, '[name].[hash].css'),
-      chunkFilename: path.join(subDir.css, '[id].[chunkhash].css')
+      chunkFilename: path.join(subDir.css, '[id].[chunkhash].css'),
     }),
     new HtmlWebpackPlugin({
       template: './src/templates/index.html',
-      filename: path.resolve(__dirname, djangoPath.templates, 'index.html')
-    })
+      filename: path.resolve(
+        __dirname,
+        '..',
+        djangoPath.templates,
+        'index.html'
+      ),
+    }),
   ];
 
   config.optimization = {
@@ -94,10 +104,10 @@ if (task === 'dev') {
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors'
-        }
-      }
-    }
+          name: 'vendors',
+        },
+      },
+    },
   };
 }
 
