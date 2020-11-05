@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import flv from 'flv.js';
 import { fetchStream } from '../../actions';
+import { NMS } from '../secret';
 
 class StreamShow extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class StreamShow extends React.Component {
 
     this.player = flv.createPlayer({
       type: 'flv',
-      url: `https://api.meetm.io/streams/streaming/live/${this.props.match.params.id}.flv`
+      url: `${NMS}${this.props.match.params.id}.flv`,
     });
     this.player.attachMediaElement(this.videoRef.current);
     this.player.load();
@@ -55,7 +56,7 @@ class StreamShow extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    stream: state.streams[ownProps.match.params.id]
+    stream: state.streams[ownProps.match.params.id],
   };
 };
 

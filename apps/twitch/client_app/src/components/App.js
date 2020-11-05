@@ -95,7 +95,7 @@ const App = () => {
               >
                 OBS
               </a>
-              ), set "rtmp://api.meetm.io:1935/live" as the stream serever and
+              ), set "rtmp://meetm.io/live" as the stream serever and
               <span className="ui label">Stream ID</span> as the Stream Key.
             </li>
             <li>
