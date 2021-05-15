@@ -1,18 +1,7 @@
-# general ignores
-**/.env
-**/.envrc
-**/.direnv
-**/.tool-versions
-**/.git*
-docker-compose.yml
-/resources
-
-# django specific ignores
-/media
-/static
-**/__pycache__
-
-# client app ignores
-**/client_app
-.prettierrc*
-babel.config*
+*
+!/apps
+!/meetm
+!/requirements.txt
+!/manage.py
+!/docker-entrypoint.sh
+/apps/**/client_app

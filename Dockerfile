@@ -1,11 +1,16 @@
-FROM python:3.8-slim
-ENV PYTHONUNBUFFERED=1 DEBUG_MODE=${DEBUG_MODE:-FALSE}
+FROM --platform=linux/amd64 python:3.9.5-slim
+LABEL io.meetm.app='main' release='20210515' maintainer='Mark Ye <mark@meetm.io>'
+ENV PYTHONUNBUFFERED=1
 
-WORKDIR /code
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+WORKDIR /app
 COPY . .
+RUN pip install -r requirements.txt
+
+# media/static files are to be served by dedicated server (site root)
+# location /app/media must be exposed and mounted from host so user uploads can be preserved.
+VOLUME [ "/app/media" ]
 
 EXPOSE 80
 
-CMD [ "gunicorn", "-w 3", "-b 0.0.0.0:80", "meetm.wsgi" ]
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD [ "production" ]

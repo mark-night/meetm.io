@@ -1,1 +1,18 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon"/><title>Meet Mark</title><link href="/static/meetm/css/main.e6ed8977.css" rel="stylesheet"></head><body><div id="root"></div><script src="/static/meetm/js/main.e6ed8977.js"></script></body></html>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'meetm/css/base.css' %}">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <title>{% block title %}Meet Mark{% endblock title %}</title>
+</head>
+
+<body>
+  {% block content %}{% endblock content %}
+</body>
+
+</html>

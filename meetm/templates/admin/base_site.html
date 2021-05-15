@@ -3,47 +3,7 @@
 {% block title %}meetm.io | Administration{% endblock %}
 
 {% block extrastyle %}
-<style>
-  #header,
-  .button.default,
-  input[type=submit].default,
-  .submit-row input.default {
-    background-color: #174460;
-  }
-
-  .module h2,
-  .module caption,
-  .inline-group h2,
-  div.breadcrumbs,
-  .button,
-  input[type=submit],
-  input[type=button],
-  .submit-row input,
-  a.button {
-    background-color: #239eca;
-  }
-
-  #branding h1,
-  #branding h1 a:link,
-  #branding h1 a:visited,
-  #header #branding #site-name a {
-    color: #e4b99b;
-    font-weight: 400;
-  }
-
-  .login #header #branding #site-name a {
-    font-size: 2rem;
-    vertical-align: middle;
-  }
-
-  #header {
-    color: #e4b99b;
-  }
-
-  #site-name img {
-    margin-right: 0.5rem;
-  }
-</style>
+<link rel="stylesheet" href="{% static 'admin/css/admin.css' %}">
 {% endblock extrastyle %}
 
 {% block branding %}

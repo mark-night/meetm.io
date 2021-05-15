@@ -1,0 +1,35 @@
+@import 'https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&family=Source+Code+Pro&display=swap';
+
+/* VARIABLES */
+:root {
+    --font-sans-serif: 'Oxygen', sans-serif;
+    --font-monospace: 'Source Code Pro', monospace;
+
+    --color-pop: #d34633;
+    --color-soft: #e4b99b;
+    --color-pale: #c8d1d8;
+    --color-base: #239eca;
+    --color-dark: #174460;
+    --white: #e8edf1;
+    --black: #03090e;
+}
+
+html,
+body {
+    margin: 0;
+    box-sizing: border-box;
+    background-color: var(--white);
+    font-family: var(--font-sans-serif);
+}
+pre {
+    font-family: var(--font-monospace);
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../img/cloud.jpg);
+    background-origin: border-box;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

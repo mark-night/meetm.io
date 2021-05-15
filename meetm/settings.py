@@ -17,7 +17,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 if 'DEBUG_MODE' in os.environ and os.environ['DEBUG_MODE'].lower() == 'false':
     if 'ALLOWED_HOSTS' not in os.environ:
         sys.exit('ALLOWED_HOSTS must be set in production. Aborted.')
