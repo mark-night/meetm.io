@@ -34,17 +34,18 @@ const cacheForCORS = getCacheName('cors'); // resources from other origins
 self.addEventListener('install', e => {
   e.waitUntil(
     Promise.all([
-      caches
-        .open(cacheForMeta)
-        .then(cache =>
-          cache.addAll([
-            '/api/proj/',
-            '/static/favicon.ico',
-            '/static/android-chrome-192x192.png',
-            '/static/android-chrome-512x512.png',
-            '/static/apple-touch-icon.png',
-          ])
-        ),
+      caches.open(cacheForMeta).then(cache =>
+        cache.addAll([
+          // Adding cache on `install` event in fact same as preaching, which
+          // internally uses CacheOnly strategy. API calls should never be
+          // cached here if need to be cached.
+          // '/api/proj/',
+          '/static/favicon.ico',
+          '/static/android-chrome-192x192.png',
+          '/static/android-chrome-512x512.png',
+          '/static/apple-touch-icon.png',
+        ])
+      ),
       caches
         .open(cacheForCORS)
         .then(cache =>
@@ -67,6 +68,10 @@ registerRoute(
     url.origin === self.location.origin &&
     (url.pathname.startsWith('/api/') ||
       /\/static\/[^/]+\.(png|xml|ico|svg)$/.test(url.pathname)),
+  // ! Different browsers implement differently for cache handling, for example,
+  // ! with NetworkFirst, Safari reads response header's 'Cache-Control', which
+  // ! should be set to 'no-cache' or other equivalent values, otherwise,
+  // ! a previous browser cache will be served instead of fetching from network.
   new NetworkFirst({ cachename: cacheForMeta, networkTimeoutSeconds: 2 })
 );
 
